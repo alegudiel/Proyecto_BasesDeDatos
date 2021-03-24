@@ -32,13 +32,13 @@ while(opcion):
         enteruser = input('Enter your username ')
         enterpass = getpass.getpass('Enter your password ')
         if(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 1):
-            print('Premium Login Successful')
+            print('\nPremium Login Successful')
             m.subsMenu(enteruser)
         elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 2):
-            print('Admin Login Successful')
+            print('\nAdmin Login Successful')
             m.adminMenu(enteruser)
         elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 3):
-            print('Free Login Successful')
+            print('\nFree Login Successful')
             contador = 0
             m.freeMenu(enteruser, contador)
         else:   

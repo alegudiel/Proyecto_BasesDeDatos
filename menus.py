@@ -33,7 +33,7 @@ def freeMenu(user, contador):
 def subsMenu(user):
     while True:
         print("Current Subscription: Premium")
-        print("What do you want to do? \n")
+        print("What do you want to do? ")
         print("1. Listen to music \n2. Playlists \n3.Exit")
         menu2 = int(input())
         if (menu2 == 1):    
@@ -46,6 +46,7 @@ def subsMenu(user):
             cuenta = db.countSearch() + 1
             #crea un nuevo registro de busqueda para encontrar a los usuarios mas activos
             db.newSearch(cuenta, user, cancion)
+            break
         if(menu2 == 2):
             while True:
                 de = int(input('\n1. Create Playlist \n2. Add Song to Playlist \n3. Show Playlists\n4. Exit\n'))
@@ -61,11 +62,17 @@ def subsMenu(user):
                     db.addToPL(id, play_id, song_id)
                 elif de == 3:
                     print('\nThese are your playlists: ', user)
-                    db.getPlaylists(user)
-                    cancion = input('Enter the song number: ')
-                    db.searchSong(cancion)
-                    cuenta = db.countSearch() + 1
-                    db.newSearch(cuenta, user, cancion)
+                    if db.getPlaylists(user):
+                        cancion = input('Enter the song number: ')
+                        db.searchSong(cancion)
+                        cuenta = db.countSearch() + 1
+                        db.newSearch(cuenta, user, cancion)
+                    else:
+                        new = input('You do not have playlists, do you want to create a new one? Y/n')
+                        if new == 'y' or 'Y':
+                            id = db.countpl() + 1
+                        name = input('Playlist name ')
+                        db.newPL(id, name, user)
                 else:
                     break
         else:

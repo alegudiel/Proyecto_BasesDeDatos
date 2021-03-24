@@ -52,8 +52,12 @@ def getPlaylists(user):
     cur = con.cursor()
     cur.execute('select pl_name, id_song, nombre from playlist p inner join playlist_songs ps on p.id_playlist = ps.id_pl inner join cancion c on ps.id_song = c.id_cancion where p.pl_owner = %s', (user,))
     row = cur.fetchall()
-    for r in row:
-        print(f"Playlist: {r[0]}, song id: {r[1]}, Song: {r[2]}")
+    if row.len() > 0:
+        for r in row:
+            print(f"Playlist: {r[0]}, song id: {r[1]}, Song: {r[2]}")
+        return True
+    elif row.len() == 0:
+        return False
 
 #funcion para verificar el login
 def checkUser(user, password):
