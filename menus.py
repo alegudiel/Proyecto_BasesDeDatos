@@ -19,8 +19,11 @@ def freeMenu(user, contador):
             db.newSearch(cuenta, user, cancion)
         elif(menu2 == 1 and contador == 3):
             print('Please upgrade your subscription: \n')
-            subMenu()
-            subsMenu(user)
+            after = subMenu()
+            if after:
+                subsMenu(user)
+            if after == False:
+                break
             break
         elif(menu2 == 2):
             subMenu()
@@ -87,10 +90,11 @@ def subMenu():
             username = input("enter your username: ")
             db.alterSub(username, 'premium')
             print('Welcome to SounCity Premium. You can now listen to unlimited songs')
-            break
+            return True
         if pregunta == '2':
             print('Come back tomorrow for another 3 songs ')
-            break
+            return False
+        break
 
 #menu de admin
 def adminMenu(user):
@@ -108,3 +112,5 @@ def adminMenu(user):
             db.newSearch(cuenta, user, cancion)
         if(menu2 == 2):
             print('1. ')
+        if(menu2 == 3):
+            break

@@ -148,7 +148,7 @@ def alterSong(song, newvalue):
 #borrar cancion
 def delSong(song):
     cur = con.cursor()
-    cur.execute('delete from cancion where nombre = %s', (song))
+    cur.execute('delete from cancion where id_cancion = %s', (song))
 
     #funciones de admin, muestran valores
 #albumes mas recientes
