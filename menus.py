@@ -42,11 +42,13 @@ def subsMenu(user):
             #pregunta por la cancion   
             cancion = input('Enter the song number: ')
             db.searchSong(cancion)
+            #asigna un id automatico para mejor orden en la base
             cuenta = db.countSearch() + 1
+            #crea un nuevo registro de busqueda para encontrar a los usuarios mas activos
             db.newSearch(cuenta, user, cancion)
         if(menu2 == 2):
             while True:
-                de = int(input('1. Create Playlist \n2. Add Song to Playlist \n3. Show Playlists\n4. Exit\n'))
+                de = int(input('\n1. Create Playlist \n2. Add Song to Playlist \n3. Show Playlists\n4. Exit\n'))
                 if de == 1:
                     id = db.countpl() + 1
                     name = input('Playlist name ')
@@ -58,13 +60,16 @@ def subsMenu(user):
                     song_id = int(input('\nSong to your playlist '))
                     db.addToPL(id, play_id, song_id)
                 elif de == 3:
-                    print('These are your playlists: \n')
-                    
+                    print('\nThese are your playlists: ', user)
+                    db.getPlaylists(user)
+                    cancion = input('Enter the song number: ')
+                    db.searchSong(cancion)
+                    cuenta = db.countSearch() + 1
+                    db.newSearch(cuenta, user, cancion)
                 else:
                     break
         else:
             break
-
 
 #menu para suscribirse
 def subMenu():
