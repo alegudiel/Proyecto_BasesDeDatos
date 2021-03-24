@@ -47,6 +47,12 @@ def countCuentas():
 
 
 ############################funciones de interfaz
+#funcion canciones de playlist
+
+
+#funcion playlists
+
+
 #funcion para verificar el login
 def checkUser(user, password):
     cur = con.cursor()
@@ -55,6 +61,7 @@ def checkUser(user, password):
     for r in row:
         if user == r[0] and password == r[1]:
             return True
+
 #funcion para aniadir un nuevo usuario a la base
 def addUser(user, password, email):
     cur = con.cursor()
@@ -74,11 +81,13 @@ def checkSub(user):
     else:
         return 3
 
+#cambiar la suscripcion
 def alterSub(username, newtype):
     cur = con.cursor()
     cur.execute('update cuenta set user_type = %s where username = %s', (newtype, username))
     con.commit()
 
+#agregar una nueva suscripcion a usuarios nuevos
 def newSub(username):
     cuentas = countCuentas() + 1
     cur = con.cursor()
