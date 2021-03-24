@@ -43,5 +43,3 @@ while(opcion):
             m.freeMenu(enteruser, contador)
         else:   
             print('Login failed')
-
-
