@@ -29,5 +29,16 @@ while(opcion):
         enterpass = getpass.getpass('Enter your password ')
         if db.checkUser(enteruser, enterpass) == True:
             print('Login Successful')
+
+            print("What do you want to do? ")
+            print("1. Listen to music \n 2. Suscribe")
+            menu2 = int(input())
+
+            if (menu2 == 1):
+                song1 = ("Your are listening to Save your tears by The Weekend ")
+
+                #def songs 
+            
+
         else:
             print('Login failed')
