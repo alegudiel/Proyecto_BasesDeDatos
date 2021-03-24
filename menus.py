@@ -107,53 +107,53 @@ def adminMenu(user):
             cuenta = db.countSearch() + 1
             db.newSearch(cuenta, user, cancion)
         if(menu2 == 2):
-            preguntadmin = input('1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Reportes ')
-            if preguntaadmin=='1'
+            preguntaadmin = input('1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Reportes ')
+            if preguntaadmin=='1':
                 #muestra el catalogo    
                 db.catalogo()
                 #pregunta por la cancion   
                 cancionborrar = input('Enter the song number you want to delete: ')
                 db.delsong(cancionborrar)
-            if preguntaadmin=='2'
+            if preguntaadmin=='2':
                 #muestra el catalogo    
                 db.catalogo()
                 #pregunta por la cancion   
                 cancionmodificar = input('Enter the song name you want to modify: ')
                 cancioncambio = input('Enter the new value of the song : ')
                 db.alternameSong(cancionmodificar,cancioncambio)
-            if preguntaadmin=='3'
+            if preguntaadmin=='3':
                 #muestra el catalogo de albums
                 db.catalogoalbumes()
                 #pregunta por el album a modificar
                 albummodificar = input('Enter the album name you want to modify: ')
                 albumcambio = input('Enter the new value of the album : ')
                 db.alteralbum(albummodificar,albumcambio)
-            if preguntaadmin == '4'
+            if preguntaadmin == '4':
                 #muestra el catalogo de artistas
                 db.catalogoartistas()
                 #pregunta por el artista a modificar
                 artistamodificar= input('Enter the artist name you want to modify: ')
                 artistacambio = input('Enter the new value of the artist: ')
                 db.alterartist(artistamodificar,artistacambio)
-            if preguntaadmin == '5'
+            if preguntaadmin == '5':
                 #muestra el catalogo de albumes
                 db.catalogoalbumes()
                 #pregunta por el album a borrar
                 albumborrar = input('Enter the album name you want to delete: ')
                 db.delalbum(albumborrar)
-            if preguntaadmin == '6'
+            if preguntaadmin == '6':
                 #muestra el catalogo de artistas
                 db.catalogoartistas90
                 #pregunta por el artista a borrar
                 artistaborrar = input ('Enter the artist name you want to delete: ')
                 db.delartist(artistaborrar)
-            if preguntaadmin == '7'
-                eleccionreporte = input('1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimostres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma ')
-                if eleccionreporte == '1'
+            if preguntaadmin == '7':
+                eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimostres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma ')
+                if eleccionreporte == '1':
                     db.albumesRecientes()           
-                if eleccionreporte == '4'
-                    mostProd():
-                if eleccionreporte == '5'
-                    popularGen()
-                if eleccionreporte == '6'                
-                    mostActive()
+                if eleccionreporte == '4':
+                    db.mostProd()
+                if eleccionreporte == '5':
+                    db.popularGen()
+                if eleccionreporte == '6':               
+                    db.mostActive()

@@ -182,12 +182,12 @@ def delSong(song):
     cur.execute('delete from cancion where nombre = %s', (song))
 
 #borrar album
-def delalbum(album)
+def delalbum(album):
     cur = con.cursor()
     cur.execute('delete from Album where nombre =%s'),(album)
 
 #borrar artista
-def delartist(artist)
+def delartist(artist):
     cur = con.cursor()
     cur.execute('delete from Artist where nombre =%s'),(artist)
 
