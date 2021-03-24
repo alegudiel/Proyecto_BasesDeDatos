@@ -113,14 +113,14 @@ def adminMenu(user):
                 db.catalogo()
                 #pregunta por la cancion   
                 cancionborrar = input('Enter the song number you want to delete: ')
-                db.delsong(cancionborrar)
+                db.delSong(cancionborrar)
             if preguntaadmin=='2':
                 #muestra el catalogo    
                 db.catalogo()
                 #pregunta por la cancion   
                 cancionmodificar = input('Enter the song name you want to modify: ')
                 cancioncambio = input('Enter the new value of the song : ')
-                db.alternameSong(cancionmodificar,cancioncambio)
+                db.alternameSong(cancionmodificar, cancioncambio)
             if preguntaadmin=='3':
                 #muestra el catalogo de albums
                 db.catalogoalbumes()
@@ -143,13 +143,14 @@ def adminMenu(user):
                 db.delalbum(albumborrar)
             if preguntaadmin == '6':
                 #muestra el catalogo de artistas
-                db.catalogoartistas90
+                db.catalogoartistas()
                 #pregunta por el artista a borrar
                 artistaborrar = input ('Enter the artist name you want to delete: ')
                 db.delartist(artistaborrar)
             if preguntaadmin == '7':
                 eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimostres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma ')
                 if eleccionreporte == '1':
+                    print("halloa")
                     db.albumesRecientes()           
                 if eleccionreporte == '4':
                     db.mostProd()

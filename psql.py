@@ -128,7 +128,7 @@ def catalogoalbumes():
     cur.execute('select Album')
     row = cur.fetchall()
     for r in row:
-         print(f" Album {r[0]}")
+        print(f" Album {r[0]}")
 
 #catalogoartistas
 def catalogoartistas():
@@ -159,22 +159,22 @@ def agregarCancion(id, name, artist, genre, time, album, date, link):
 #modifica una cancion
 def alterSong(song, newvalue):
     cur = con.cursor()
-    cur.execute('update cancion set artist = %s where nombre = %s', (newvalue, song))
+    cur.execute('update cancion set artista = %s where id_cancion = %s', (newvalue, song))
 
 #modifica un album
-def alteralbum(album,newvalue):
+def alteralbum(song,newvalue):
     cur=con.cursor()
-    cur.execute('update cancion set Album =%s where nombre = %s'),(newvalue , album)
+    cur.execute('update cancion set album = %s where id_cancion = %s',(newvalue , song))
 
 #modifica una cancion
 def alternameSong(song,newvalue):
     cur = con.cursor()
-    cur.execute('update cancion set song =%s where nombre =%s') , (newvalue , song)
+    cur.execute('update cancion set nombre = %s where id_cancion = %s', (newvalue , song))
 
 #modifica un artista
-def alterartist(artist,newvalue):
+def alterartist(song,newvalue):
     cur = con.cursor()
-    cur.execute('update Album set Album =%s where nombre=%s') , (newvalue , artist)
+    cur.execute('update cancion set artista = %s where id_cancion= %s', (newvalue , song))
 
 #borrar cancion
 def delSong(song):
@@ -184,19 +184,19 @@ def delSong(song):
 #borrar album
 def delalbum(album):
     cur = con.cursor()
-    cur.execute('delete from Album where nombre =%s'),(album)
+    cur.execute('delete from Album where nombre = %s',(album))
 
 #borrar artista
 def delartist(artist):
     cur = con.cursor()
-    cur.execute('delete from Artist where nombre =%s'),(artist)
+    cur.execute('delete from Artist where nombre = %s',(artist))
 
 
     #funciones de admin, muestran valores
 #albumes mas recientes
 def albumesRecientes():
     cur = con.cursor()
-    cur.execute('SELECT album, fecha_lanzamiento FROM cancion c WHERE c.fecha_lanzamiento BETWEEN %s and %s group by album, fecha_lanzamiento order by fecha_lanzamiento desc', ['2021-03-21', '2021-03-27'])
+    cur.execute('SELECT album, fecha_lanzamiento FROM cancion c WHERE c.fecha_lanzamiento BETWEEN %s and %s group by album, fecha_lanzamiento order by fecha_lanzamiento desc', ('2021-03-21', '2021-03-27'))
     row = cur.fetchall()
     for r in row:
         print(f"{r[0]}, Album {r[1]}, Lanzamiento {r[2]}")
@@ -215,7 +215,7 @@ def popularGen():
     cur.execute('select genero , count(genero) from Cancion group by genero order by count(genero) desc limit 1')
     row = cur.fetchall()
     for r in row:
-        print(f"{r[0]}, Fenero {r[1]}, Canciones {r[2]}")
+        print(f"{r[0]}, Genero {r[1]}, Canciones {r[2]}")
 
 #usuario mas activo
 def mostActive():

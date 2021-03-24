@@ -2,13 +2,13 @@ import psql as db
 import getpass
 import menus as m
 
-#bienvenida y menu
-print('----------Welcome to SoundCity----------')
-print('1.Create account\n2. Login')
 opcion = True
 
 #decision 1
 while(opcion):
+#bienvenida y menu
+    print('----------Welcome to SoundCity----------')
+    print('1.Create account\n2. Login')
     menu = int(input())
     if menu == 1:
         try:
