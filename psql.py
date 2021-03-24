@@ -220,7 +220,7 @@ def popularGen():
 #usuario mas activo
 def mostActive():
     cur = con.cursor()
-    cur.execute('select id_user, count(id_user) from Buscador group by id_user order by count(id_user) desc limit 5')
+    cur.execute('select Usuario, count(Usuario) as busquedas from Buscador group by Usuario order by count(Usuario) desc limit 5')
     row = cur.fetchall()
     for r in row:
-        print(f"{r[0]}, id_user {r[1]}, Busquedas {r[2]}")
+        print(f"Username {r[0]}, Busquedas {r[1]}")
