@@ -114,13 +114,29 @@ def searchSong(song):
     for r in row:
         print(f"numero {r[0]}, nombre {r[1]}, link {r[2]}")
 
-#catalogo
+#catalogorolas
 def catalogo():
     cur = con.cursor()
     cur.execute('select id_cancion, nombre, link from cancion order by id_cancion, nombre, link')
     row = cur.fetchall()
     for r in row:
         print(f"{r[0]}, Cancion {r[1]}, Link {r[2]}")
+
+#catalogoalbumes
+def catalogoalbumes():
+    cur = con.cursor()
+    cur.execute('select Album')
+    row = cur.fetchall()
+    for r in row:
+         print(f" Album {r[0]}")
+
+#catalogoartistas
+def catalogoartistas():
+    cur = con.cursor()
+    cur.execute('select Artist')
+    row = cur.fetchall()
+    for r in row:
+        print(f" Artist {r[0]}")
     
 #funcion de playlists
 def newPL(id, name, owner):
@@ -145,10 +161,36 @@ def alterSong(song, newvalue):
     cur = con.cursor()
     cur.execute('update cancion set artist = %s where nombre = %s', (newvalue, song))
 
+#modifica un album
+def alteralbum(album,newvalue):
+    cur=con.cursor()
+    cur.execute('update cancion set Album =%s where nombre = %s'),(newvalue , album)
+
+#modifica una cancion
+def alternameSong(song,newvalue):
+    cur = con.cursor()
+    cur.execute('update cancion set song =%s where nombre =%s') , (newvalue , song)
+
+#modifica un artista
+def alterartist(artist,newvalue):
+    cur = con.cursor()
+    cur.execute('update Album set Album =%s where nombre=%s') , (newvalue , artist)
+
 #borrar cancion
 def delSong(song):
     cur = con.cursor()
-    cur.execute('delete from cancion where id_cancion = %s', (song))
+    cur.execute('delete from cancion where nombre = %s', (song))
+
+#borrar album
+def delalbum(album)
+    cur = con.cursor()
+    cur.execute('delete from Album where nombre =%s'),(album)
+
+#borrar artista
+def delartist(artist)
+    cur = con.cursor()
+    cur.execute('delete from Artist where nombre =%s'),(artist)
+
 
     #funciones de admin, muestran valores
 #albumes mas recientes

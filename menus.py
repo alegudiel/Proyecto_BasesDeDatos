@@ -19,11 +19,8 @@ def freeMenu(user, contador):
             db.newSearch(cuenta, user, cancion)
         elif(menu2 == 1 and contador == 3):
             print('Please upgrade your subscription: \n')
-            after = subMenu()
-            if after:
-                subsMenu(user)
-            if after == False:
-                break
+            subMenu()
+            subsMenu(user)
             break
         elif(menu2 == 2):
             subMenu()
@@ -90,11 +87,10 @@ def subMenu():
             username = input("enter your username: ")
             db.alterSub(username, 'premium')
             print('Welcome to SounCity Premium. You can now listen to unlimited songs')
-            return True
+            break
         if pregunta == '2':
             print('Come back tomorrow for another 3 songs ')
-            return False
-        break
+            break
 
 #menu de admin
 def adminMenu(user):
@@ -111,6 +107,53 @@ def adminMenu(user):
             cuenta = db.countSearch() + 1
             db.newSearch(cuenta, user, cancion)
         if(menu2 == 2):
-            print('1. ')
-        if(menu2 == 3):
-            break
+            preguntadmin = input('1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Reportes ')
+            if preguntaadmin=='1'
+                #muestra el catalogo    
+                db.catalogo()
+                #pregunta por la cancion   
+                cancionborrar = input('Enter the song number you want to delete: ')
+                db.delsong(cancionborrar)
+            if preguntaadmin=='2'
+                #muestra el catalogo    
+                db.catalogo()
+                #pregunta por la cancion   
+                cancionmodificar = input('Enter the song name you want to modify: ')
+                cancioncambio = input('Enter the new value of the song : ')
+                db.alternameSong(cancionmodificar,cancioncambio)
+            if preguntaadmin=='3'
+                #muestra el catalogo de albums
+                db.catalogoalbumes()
+                #pregunta por el album a modificar
+                albummodificar = input('Enter the album name you want to modify: ')
+                albumcambio = input('Enter the new value of the album : ')
+                db.alteralbum(albummodificar,albumcambio)
+            if preguntaadmin == '4'
+                #muestra el catalogo de artistas
+                db.catalogoartistas()
+                #pregunta por el artista a modificar
+                artistamodificar= input('Enter the artist name you want to modify: ')
+                artistacambio = input('Enter the new value of the artist: ')
+                db.alterartist(artistamodificar,artistacambio)
+            if preguntaadmin == '5'
+                #muestra el catalogo de albumes
+                db.catalogoalbumes()
+                #pregunta por el album a borrar
+                albumborrar = input('Enter the album name you want to delete: ')
+                db.delalbum(albumborrar)
+            if preguntaadmin == '6'
+                #muestra el catalogo de artistas
+                db.catalogoartistas90
+                #pregunta por el artista a borrar
+                artistaborrar = input ('Enter the artist name you want to delete: ')
+                db.delartist(artistaborrar)
+            if preguntaadmin == '7'
+                eleccionreporte = input('1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimostres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma ')
+                if eleccionreporte == '1'
+                    db.albumesRecientes()           
+                if eleccionreporte == '4'
+                    mostProd():
+                if eleccionreporte == '5'
+                    popularGen()
+                if eleccionreporte == '6'                
+                    mostActive()
