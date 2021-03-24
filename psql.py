@@ -7,7 +7,46 @@ con = psycopg2.connect(
     user = 'ifgilvux',
     password = 'MRUyQ-aHX7MHs_nHxahu98Yy0yaXEiGr',
 )
-#funciones de interfaz
+
+############################funciones para contar 
+def countpl():
+    contador = 0
+    cur = con.cursor()
+    cur.execute('SELECT * from playlist')
+    row = cur.fetchall()
+    for r in row:
+        contador +=1
+    return contador
+
+def countpls():
+    contador = 0
+    cur = con.cursor()
+    cur.execute('SELECT * from playlist_songs')
+    row = cur.fetchall()
+    for r in row:
+        contador +=1
+    return contador
+
+def countSearch():
+    contador = 0
+    cur = con.cursor()
+    cur.execute('SELECT * from buscador')
+    row = cur.fetchall()
+    for r in row:
+        contador +=1
+    return contador
+
+def countCuentas():
+    contador = 0
+    cur = con.cursor()
+    cur.execute('SELECT * from cuenta')
+    row = cur.fetchall()
+    for r in row:
+        contador +=1
+    return contador
+
+
+############################funciones de interfaz
 #funcion para verificar el login
 def checkUser(user, password):
     cur = con.cursor()
@@ -16,13 +55,41 @@ def checkUser(user, password):
     for r in row:
         if user == r[0] and password == r[1]:
             return True
-
 #funcion para aniadir un nuevo usuario a la base
 def addUser(user, password, email):
     cur = con.cursor()
     cur.execute('insert into usuario values (%s, %s, %s)', (user, password, email))
     con.commit()
     return True
+
+#funcion para verificar la suscripcion
+def checkSub(user):
+    cur = con.cursor()
+    cur.execute('select username, user_type from cuenta where username = %s', (user,))
+    row = cur.fetchall()
+    if row[0][1] == 'premium':
+        return 1
+    if row[0][1] == 'admin':
+        return 2
+    else:
+        return 3
+
+def alterSub(username, newtype):
+    cur = con.cursor()
+    cur.execute('update cuenta set user_type = %s where username = %s', (newtype, username))
+    con.commit()
+
+def newSub(username):
+    cuentas = countCuentas() + 1
+    cur = con.cursor()
+    cur.execute("insert into cuenta values(%s, %s, 'free')", (cuentas, username,))
+    con.commit()
+
+#nueva busqueda
+def newSearch(id, user, cancion):
+    cur = con.cursor()
+    cur.execute('insert into buscador values(%s, %s, %s)', (id, user, cancion))
+    con.commit()
 
 #buscar cancion
 def searchSong(song):
@@ -39,8 +106,20 @@ def catalogo():
     row = cur.fetchall()
     for r in row:
         print(f"{r[0]}, Cancion {r[1]}, Link {r[2]}")
+    
+#funcion de playlists
+def newPL(id, name, owner):
+    cur = con.cursor()
+    cur.execute('insert into playlist values (%s, %s, %s)', (id, name, owner))
+    con.commit()
 
-#funciones de administrador que alteran la tabla
+#aniade cancion a playlist
+def addToPL(id, pl_id, song_id):
+    cur = con.cursor()
+    cur.execute('insert into playlist_songs values (%s, %s, %s)', (id, pl_id, song_id))
+    con.commit()
+
+############################funciones de administrador que alteran las tablas
 #agrega canciones a la base de datos
 def agregarCancion(id, name, artist, genre, time, album, date, link):
     cur = con.cursor()
@@ -56,7 +135,7 @@ def delSong(song):
     cur = con.cursor()
     cur.execute('delete from cancion where nombre = %s', (song))
 
-#funciones de admin, muestran valores
+    #funciones de admin, muestran valores
 #albumes mas recientes
 def albumesRecientes():
     cur = con.cursor()

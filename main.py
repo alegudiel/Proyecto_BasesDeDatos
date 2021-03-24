@@ -1,17 +1,6 @@
 import psql as db
 import getpass
-
-#menu reproduccion
-def newMenu():
-    print("What do you want to do? ")
-    print("1. Listen to music \n 2. Suscribe")
-    menu2 = int(input())
-    if (menu2 == 1):    
-        #muestra el catalogo    
-        db.catalogo()   
-        #pregunta por la cancion   
-        cancion = input('Enter the song number: ')
-        db.searchSong(cancion)
+import menus as m
 
 #bienvenida y menu
 print('----------Welcome to SoundCity----------')
@@ -34,18 +23,25 @@ while(opcion):
         newpass = getpass.getpass('Enter your password ')
         newmail = input('Enter your mail ')
         if (db.addUser(newuser, newpass, newmail) == True):
-            while True:
-                newMenu()
+            db.newSub(newuser)
+            contador = 0
+            m.freeMenu(newuser, contador)
 
     else:
         print("------Login------")
         enteruser = input('Enter your username ')
         enterpass = getpass.getpass('Enter your password ')
-        if db.checkUser(enteruser, enterpass) == True:
-            print('Login Successful')
-            newMenu()
-
-        else:
+        if(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 1):
+            print('Premium Login Successful')
+            m.subsMenu(enteruser)
+        elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 2):
+            print('Admin Login Successful')
+            m.adminMenu(enteruser)
+        elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 3):
+            print('Free Login Successful')
+            contador = 0
+            m.freeMenu(enteruser, contador)
+        else:   
             print('Login failed')
 
 
