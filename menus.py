@@ -150,7 +150,6 @@ def adminMenu(user):
             if preguntaadmin == '7':
                 eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimostres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma ')
                 if eleccionreporte == '1':
-                    print("halloa")
                     db.albumesRecientes()           
                 if eleccionreporte == '4':
                     db.mostProd()

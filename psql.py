@@ -207,7 +207,7 @@ def mostProd():
     cur.execute('select artista , count(artista) from Cancion group by artista order by count(artista) desc limit 1')
     row = cur.fetchall()
     for r in row:
-        print(f"{r[0]}, Artista {r[1]}, Lanzamientos {r[2]}")
+        print(f"Artista: {r[0]},  Lanzamientos: {r[1]}")
 
 #genero mas popular
 def popularGen():
@@ -215,7 +215,7 @@ def popularGen():
     cur.execute('select genero , count(genero) from Cancion group by genero order by count(genero) desc limit 1')
     row = cur.fetchall()
     for r in row:
-        print(f"{r[0]}, Genero {r[1]}, Canciones {r[2]}")
+        print(f"Genero: {r[0]}, Canciones: {r[1]}")
 
 #usuario mas activo
 def mostActive():
