@@ -151,6 +151,10 @@ def adminMenu(user):
                 eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimostres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma ')
                 if eleccionreporte == '1':
                     db.albumesRecientes()           
+                if eleccionreporte == '2':
+                    print('Aun en fase de desarrollo \n')           
+                if eleccionreporte == '3':
+                    print('Aun en fase de desarrollo \n')           
                 if eleccionreporte == '4':
                     db.mostProd()
                 if eleccionreporte == '5':
