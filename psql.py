@@ -1,4 +1,7 @@
 import psycopg2
+import datetime 
+
+rn = datetime.datetime.now()
 
 #conexion a la base de datos que esta en elephntsql
 con = psycopg2.connect(
@@ -62,11 +65,13 @@ def getPlaylists(user):
 #funcion para verificar el login
 def checkUser(user, password):
     cur = con.cursor()
-    cur.execute('SELECT username, pw from usuario')
+    cur.execute('SELECT u.username, u.pw, c.account_state from usuario u join cuenta c on u.username=c.username')
     row = cur.fetchall()
     for r in row:
-        if user == r[0] and password == r[1]:
+        if user == r[0] and password == r[1] and r[2] == 'V':
             return True
+        if r[2] != 'V':
+            print('Your user has been disabled.\n')
 
 #funcion para aniadir un nuevo usuario a la base
 def addUser(user, password, email):
@@ -97,22 +102,25 @@ def alterSub(username, newtype):
 def newSub(username):
     cuentas = countCuentas() + 1
     cur = con.cursor()
-    cur.execute("insert into cuenta values(%s, %s, 'free')", (cuentas, username,))
+    cur.execute("insert into cuenta values(%s, %s, %s)", (cuentas, username, 'free'))
     con.commit()
 
 #nueva busqueda
 def newSearch(id, user, cancion):
     cur = con.cursor()
-    cur.execute('insert into buscador values(%s, %s, %s)', (id, user, cancion))
+    cur.execute('insert into buscador values(%s, %s, %s, %s)', (id, user, cancion, rn.strftime('%Y-%m-%d')))
     con.commit()
 
 #buscar cancion
 def searchSong(song):
     cur = con.cursor()
-    cur.execute('select id_cancion, nombre, link from cancion where id_cancion = %s', (song))
+    cur.execute('select id_cancion, nombre, link, active from cancion where id_cancion = %s', (song))
     row = cur.fetchall()
-    for r in row:
-        print(f"numero {r[0]}, nombre {r[1]}, link {r[2]}")
+    if r[3] == 'V':
+        for r in row:
+            print(f"numero {r[0]}, nombre {r[1]}, link {r[2]} \n")
+    elif r[3] == 'F':
+        print("Sorry, this song is not available in this moment. \n")
 
 #catalogorolas
 def catalogo():
@@ -120,7 +128,7 @@ def catalogo():
     cur.execute('select id_cancion, nombre, link from cancion order by id_cancion, nombre, link')
     row = cur.fetchall()
     for r in row:
-        print(f"{r[0]}, Cancion {r[1]}, Link {r[2]}")
+        print(f"{r[0]}, Song {r[1]}, Link {r[2]} \n")
 
 #catalogoalbumes
 def catalogoalbumes():
@@ -128,7 +136,7 @@ def catalogoalbumes():
     cur.execute('select Album')
     row = cur.fetchall()
     for r in row:
-        print(f" Album {r[0]}")
+        print(f" Album {r[0]} \n")
 
 #catalogoartistas
 def catalogoartistas():
@@ -154,7 +162,7 @@ def addToPL(id, pl_id, song_id):
 #agrega canciones a la base de datos
 def agregarCancion(id, name, artist, genre, time, album, date, link):
     cur = con.cursor()
-    cur.execute('insert into cancion values (%s, %s, %s, %s, %s, %s, %s, %s)', (id, name, artist, genre, time, album, date, link))
+    cur.execute('insert into cancion values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (id, name, artist, genre, time, album, date, link, 'V'))
 
 #modifica una cancion
 def alterSong(song, newvalue):
@@ -177,9 +185,9 @@ def alterartist(song,newvalue):
     cur.execute('update cancion set artista = %s where id_cancion= %s', (newvalue , song))
 
 #borrar cancion
-def delSong(song):
+def inactiveSong(song):
     cur = con.cursor()
-    cur.execute('delete from cancion where nombre = %s', (song))
+    cur.execute('update cancion set active = %s where id_cancion = song', ('F', song))
 
 #borrar album
 def delalbum(album):
@@ -199,7 +207,7 @@ def albumesRecientes():
     cur.execute('SELECT album, fecha_lanzamiento FROM cancion c WHERE c.fecha_lanzamiento BETWEEN %s and %s group by album, fecha_lanzamiento order by fecha_lanzamiento desc', ('2021-03-21', '2021-03-27'))
     row = cur.fetchall()
     for r in row:
-        print(f"{r[0]}, Album {r[1]}, Lanzamiento {r[2]}")
+        print(f"{r[0]}, Album {r[1]}, Launched {r[2]}\n")
 
 #artista con mayor produccion musical
 def mostProd():
@@ -207,7 +215,7 @@ def mostProd():
     cur.execute('select artista , count(artista) from Cancion group by artista order by count(artista) desc limit 1')
     row = cur.fetchall()
     for r in row:
-        print(f"Artista: {r[0]},  Lanzamientos: {r[1]}")
+        print(f"Artist: {r[0]},  Songs: {r[1]}\n")
 
 #genero mas popular
 def popularGen():
@@ -215,7 +223,7 @@ def popularGen():
     cur.execute('select genero , count(genero) from Cancion group by genero order by count(genero) desc limit 1')
     row = cur.fetchall()
     for r in row:
-        print(f"Genero: {r[0]}, Canciones: {r[1]}")
+        print(f"Genere: {r[0]}, Songs: {r[1]}\n")
 
 #usuario mas activo
 def mostActive():
@@ -223,4 +231,36 @@ def mostActive():
     cur.execute('select Usuario, count(Usuario) as busquedas from Buscador group by Usuario order by count(Usuario) desc limit 5')
     row = cur.fetchall()
     for r in row:
-        print(f"Username {r[0]}, Busquedas {r[1]}")
+        print(f"Username {r[0]}, Searches {r[1]}\n")
+
+#total de reproducciones por semana
+def weekViews(inicio, final):
+    cur = con.cursor()
+    cur.execute('Select nombre, count(nombre) from buscador right join cancion on id_cancion = id_cancion where fecha_busqueda in between %s and %s', (inicio, final))
+    row = cur.fetchall()
+    for r in row:
+        print(f"Song: {r[0]}, Views This week: {r[1]}\n")
+
+#x artistas con mas reproducciones entre la fecha
+def dateArtists(cant, inicio, final):
+    cur = con.cursor()
+    cur.execute('Select artist, count(id_cancion) from buscador right join cancion on id_cancion = id_cancion where fecha_busqueda in between %s and %s limit %s', (inicio, final, cant))
+    row = cur.fetchall()
+    for r in row:
+        print(f"Artista: {r[0]}, Reproducciones: {r[1]}\n")
+
+#reproducciones de genero en las fechas ingresadas
+def genreViewsIn(genre, inicio, final):
+    cur = con.cursor()
+    cur.execute('Select genre, count(genre) from buscador right join cancion on id_cancion = id_cancion where genre = %s and fecha_busqueda in between %s and %s ', (genre, inicio, final))
+    row = cur.fetchall()
+    for r in row:
+        print(f"Genere: {r[0]}, Views: {r[1]}\n")
+
+#Top x canciones con mas reproducciones de artista
+def topArtistSongs(cant, artist):
+    cur = con.cursor()
+    cur.execute('Select nombre, artista, count(nombre) from buscador right join cancion on id_cancion = id_cancion where artista = %s limit %s', (artist, cant))
+    row = cur.fetchall()
+    for r in row:
+        print(f"Genere: {r[0]}, Views: {r[1]}\n")

@@ -4,7 +4,7 @@ Proyecto desarrollado en Python y la base de datos se encuentra hosteada en Elep
 
 # Para probar el proyecto
 
-1. Instalar psycopg2 en su computador
+1. Instalar psycopg2 y datetime en su computador utilizando pip install libreria
 2. Descargar la carpeta del repositorio en su computador
 3. Abrir el programa _main.py_ y ejecutarlo
 

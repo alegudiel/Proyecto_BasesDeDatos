@@ -112,11 +112,10 @@ def adminMenu(user):
                 #muestra el catalogo    
                 db.catalogo()
                 #pregunta por la cancion   
-                cancionborrar = input('Enter the song number you want to delete: ')
-                db.delSong(cancionborrar)
+                cancionborrar = input('Enter the song number you want to Inactivate: ')
+                db.InactiveSong(cancionborrar)
             if preguntaadmin=='2':
                 #muestra el catalogo    
-                db.catalogo()
                 #pregunta por la cancion   
                 cancionmodificar = input('Enter the song name you want to modify: ')
                 cancioncambio = input('Enter the new value of the song : ')
@@ -148,7 +147,7 @@ def adminMenu(user):
                 artistaborrar = input ('Enter the artist name you want to delete: ')
                 db.delartist(artistaborrar)
             if preguntaadmin == '7':
-                eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimostres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma ')
+                eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimos tres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma \n7. Total de reproducciones por semana \n8. Los x Artistas con mas reproducciones entre fechas \n9.Total de reproducciones por genero en las fechas \n10. Top x canciones con mas reproducciones de artista ')
                 if eleccionreporte == '1':
                     db.albumesRecientes()           
                 if eleccionreporte == '2':
@@ -161,3 +160,17 @@ def adminMenu(user):
                     db.popularGen()
                 if eleccionreporte == '6':               
                     db.mostActive()
+                if eleccionreporte == '7':               
+                    db.mostActive()
+                if eleccionreporte == '8':               
+                    db.mostActive()
+                if eleccionreporte == '9':               
+                    db.mostActive()
+                if eleccionreporte == '10':               
+                    db.mostActive()
+
+def monitorMenu(user, type):
+    if type == 'a':
+        preguntaMonitorA = input()
+    elif type == 'b':
+        preguntaMonitorB = input()
