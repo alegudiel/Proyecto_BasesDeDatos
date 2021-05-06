@@ -8,7 +8,7 @@ opcion = True
 while(opcion):
 #bienvenida y menu
     print('----------Welcome to SoundCity----------')
-    print('1.Create account\n2. Login\n')
+    print('1.Create account\n2. Login\n 3. Exit')
     menu = input()
 
     if (menu == '1'):
@@ -21,7 +21,7 @@ while(opcion):
             contador = 0
             m.freeMenu(newuser, contador)
 
-    else:
+    if (menu == '2'):
         print("------Login------")
         enteruser = input('Enter your username ')
         enterpass = getpass.getpass('Enter your password ')
@@ -44,3 +44,6 @@ while(opcion):
             m.freeMenu(enteruser, contador)
         else:   
             print('Login failed\n')
+
+    else:
+        exit()
