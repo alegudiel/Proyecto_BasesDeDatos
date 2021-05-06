@@ -6,13 +6,13 @@ db.checkSub('admin')
 def freeMenu(user, contador):
     while contador < 4:
         print("What do you want to do? ")
-        print("1. Listen to music \n2. Subscribe\n3. Exit")
+        print("1. Listen to music \n2. Subscribe\n3. Exit\n")
         menu2 = int(input())
         if (menu2 == 1 and contador != 3):    
             #muestra el catalogo    
             db.catalogo()   
             #pregunta por la cancion   
-            cancion = input('Enter the song number: ')
+            cancion = input('Enter the song number: \n')
             db.searchSong(cancion)
             contador +=1
             cuenta = db.countSearch() + 1
@@ -32,15 +32,15 @@ def freeMenu(user, contador):
 #menu reproduccion usuarios suscritos
 def subsMenu(user):
     while True:
-        print("Current Subscription: Premium")
-        print("What do you want to do? ")
-        print("1. Listen to music \n2. Playlists \n3.Exit")
+        print("Current Subscription: Premium\n")
+        print("What do you want to do? \n")
+        print("1. Listen to music \n2. Playlists \n3.Exit\n")
         menu2 = int(input())
         if (menu2 == 1):    
             #muestra el catalogo    
             db.catalogo()   
             #pregunta por la cancion   
-            cancion = input('Enter the song number: ')
+            cancion = input('Enter the song number: \n')
             db.searchSong(cancion)
             #asigna un id automatico para mejor orden en la base
             cuenta = db.countSearch() + 1
@@ -52,26 +52,26 @@ def subsMenu(user):
                 de = int(input('\n1. Create Playlist \n2. Add Song to Playlist \n3. Show Playlists\n4. Exit\n'))
                 if de == 1:
                     id = db.countpl() + 1
-                    name = input('Playlist name ')
+                    name = input('Playlist name \n')
                     db.newPL(id, name, user)
                 elif de == 2:
                     db.catalogo()
                     id = db.countpls() + 1
                     play_id = input('\nPlaylist id ')
-                    song_id = int(input('\nSong to your playlist '))
+                    song_id = int(input('\nSong to your playlist \n'))
                     db.addToPL(id, play_id, song_id)
                 elif de == 3:
                     print('\nThese are your playlists: ', user)
                     if db.getPlaylists(user):
-                        cancion = input('Enter the song number: ')
+                        cancion = input('Enter the song number: \n')
                         db.searchSong(cancion)
                         cuenta = db.countSearch() + 1
                         db.newSearch(cuenta, user, cancion)
                     else:
-                        new = input('You do not have playlists, do you want to create a new one? Y/n')
+                        new = input('You do not have playlists, do you want to create a new one? Y/n \n')
                         if new == 'y' or 'Y':
                             id = db.countpl() + 1
-                        name = input('Playlist name ')
+                        name = input('Playlist name \n')
                         db.newPL(id, name, user)
                 else:
                     break
@@ -81,28 +81,28 @@ def subsMenu(user):
 #menu para suscribirse
 def subMenu():
     while True:
-        print("Current Subscription: free")
+        print("Current Subscription: free\n")
         pregunta = input("Do you want to sub?\n1. Yes\n2. No\n")
         if pregunta == '1':
-            username = input("enter your username: ")
-            db.alterSub(username, 'premium')
-            print('Welcome to SounCity Premium. You can now listen to unlimited songs')
+            username = input("enter your username: \n")
+            db.alterSub(username, 'premium\n')
+            print('Welcome to SounCity Premium. You can now listen to unlimited songs\n')
             break
         if pregunta == '2':
-            print('Come back tomorrow for another 3 songs ')
+            print('Come back tomorrow for another 3 songs \n')
             break
 
 #menu de admin
 def adminMenu(user):
     while True:
-        print("What do you want to do? ")
-        print("1. Listen to music \n2. Management Tools\n3. Exit")
+        print("What do you want to do? \n")
+        print("1. Listen to music \n2. Management Tools\n3. Exit\n")
         menu2 = int(input())
         if (menu2 == 1):    
             #muestra el catalogo    
             db.catalogo()   
             #pregunta por la cancion   
-            cancion = input('Enter the song number: ')
+            cancion = input('Enter the song number: \n')
             db.searchSong(cancion)
             cuenta = db.countSearch() + 1
             db.newSearch(cuenta, user, cancion)
@@ -112,39 +112,39 @@ def adminMenu(user):
                 #muestra el catalogo    
                 db.catalogo()
                 #pregunta por la cancion   
-                cancionborrar = input('Enter the song number you want to Inactivate: ')
+                cancionborrar = input('Enter the song number you want to Inactivate: \n')
                 db.InactiveSong(cancionborrar)
             if preguntaadmin=='2':
                 #muestra el catalogo    
                 #pregunta por la cancion   
-                cancionmodificar = input('Enter the song name you want to modify: ')
-                cancioncambio = input('Enter the new value of the song : ')
+                cancionmodificar = input('Enter the song name you want to modify: \n')
+                cancioncambio = input('Enter the new value of the song : \n')
                 db.alternameSong(cancionmodificar, cancioncambio)
             if preguntaadmin=='3':
                 #muestra el catalogo de albums
                 db.catalogoalbumes()
                 #pregunta por el album a modificar
-                albummodificar = input('Enter the album name you want to modify: ')
-                albumcambio = input('Enter the new value of the album : ')
+                albummodificar = input('Enter the album name you want to modify: \n')
+                albumcambio = input('Enter the new value of the album : \n')
                 db.alteralbum(albummodificar,albumcambio)
             if preguntaadmin == '4':
                 #muestra el catalogo de artistas
                 db.catalogoartistas()
                 #pregunta por el artista a modificar
-                artistamodificar= input('Enter the artist name you want to modify: ')
-                artistacambio = input('Enter the new value of the artist: ')
+                artistamodificar= input('Enter the artist name you want to modify: \n')
+                artistacambio = input('Enter the new value of the artist: \n')
                 db.alterartist(artistamodificar,artistacambio)
             if preguntaadmin == '5':
                 #muestra el catalogo de albumes
                 db.catalogoalbumes()
                 #pregunta por el album a borrar
-                albumborrar = input('Enter the album name you want to delete: ')
+                albumborrar = input('Enter the album name you want to delete: \n')
                 db.delalbum(albumborrar)
             if preguntaadmin == '6':
                 #muestra el catalogo de artistas
                 db.catalogoartistas()
                 #pregunta por el artista a borrar
-                artistaborrar = input ('Enter the artist name you want to delete: ')
+                artistaborrar = input ('Enter the artist name you want to delete: \n')
                 db.delartist(artistaborrar)
             if preguntaadmin == '7':
                 eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimos tres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma \n7. Total de reproducciones por semana \n8. Los x Artistas con mas reproducciones entre fechas \n9.Total de reproducciones por genero en las fechas \n10. Top x canciones con mas reproducciones de artista ')

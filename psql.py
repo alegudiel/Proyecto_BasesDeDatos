@@ -89,8 +89,12 @@ def checkSub(user):
         return 1
     if row[0][1] == 'admin':
         return 2
-    else:
+    if row[0][1] == 'monitorA':
         return 3
+    if row[0][1] == 'monitorB':
+        return 4
+    else:
+        return 5
 
 #cambiar la suscripcion
 def alterSub(username, newtype):
