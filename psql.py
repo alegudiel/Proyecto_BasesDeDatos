@@ -63,13 +63,21 @@ def getPlaylists(user):
 #funcion para verificar el login
 def checkUser(user, password):
     cur = con.cursor()
-    cur.execute('SELECT u.username, u.pw, c.account_state from usuario u join cuenta c on u.username=c.username')
+    cur.execute('SELECT u.username, u.pw, c.account_state from usuario u join cuenta c on u.username=c.username where u.username = %s', (user,))
     row = cur.fetchall()
-    for r in row:
-        if user == r[0] and password == r[1] and r[2] == 'V':
-            return True
-        if r[2] != 'V':
-            print('Your user has been disabled.\n')
+    if row == []:
+        print('User not found, try again. \n')
+        return False
+    elif (row[0][0] == user and row[0][1] != password):
+        print('Incorrect Password, try again. \n')
+        return False
+    elif (row[0][0] == user and row[0][1] == password and row[0][2] == 'F'):
+        print('Your user has been disabled.\n')
+        return False
+    elif (row[0][0] == user and row[0][1] == password and row[0][2] == 'V'):
+        return True
+    else:
+        print(row)
 
 #funcion para aniadir un nuevo usuario a la base
 def addUser(user, password, email):
@@ -87,9 +95,9 @@ def checkSub(user):
         return 1
     if row[0][1] == 'admin':
         return 2
-    if row[0][1] == 'monitorA':
+    if row[0][1] == 'A':
         return 3
-    if row[0][1] == 'monitorB':
+    if row[0][1] == 'B':
         return 4
     else:
         return 5
@@ -168,31 +176,37 @@ def addToPL(id, pl_id, song_id):
 def agregarCancion(id, name, artist, genre, time, album, date, link):
     cur = con.cursor()
     cur.execute('insert into cancion values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (id, name, artist, genre, time, album, date, link, 'V'))
+    con.commit()
 
 #modifica una cancion
 def alterSong(song, newvalue):
     cur = con.cursor()
     cur.execute('update cancion set artista = %s where id_cancion = %s', (newvalue, song))
+    con.commit()
 
 #modifica un album
 def alteralbum(song,newvalue):
     cur=con.cursor()
     cur.execute('update cancion set album = %s where id_cancion = %s',(newvalue , song))
+    con.commit()
 
 #modifica una cancion
 def alternameSong(song,newvalue):
     cur = con.cursor()
     cur.execute('update cancion set nombre = %s where id_cancion = %s', (newvalue , song))
+    con.commit()
 
 #modifica un artista
 def alterartist(song,newvalue):
     cur = con.cursor()
     cur.execute('update cancion set artista = %s where id_cancion= %s', (newvalue , song))
+    con.commit()
 
 #borrar cancion
 def inactiveSong(song):
     cur = con.cursor()
     cur.execute('update cancion set active = %s where id_cancion = %s', ('F', song))
+    con.commit()
 
 #borrar album
 def delalbum(album):
@@ -204,6 +218,23 @@ def delartist(artist):
     cur = con.cursor()
     cur.execute('delete from Artist where nombre = %s',(artist))
 
+def modUserType(user, type):
+    cur = con.cursor()
+    if type == '1':
+        cur.execute('update cuenta set user_type = %s where username = %s',('free', user))
+        con.commit()
+    elif type == '2':
+        cur.execute('update cuenta set user_type = %s where username = %s',('premium', user))
+        con.commit()
+    elif type == '3':
+        cur.execute('update cuenta set user_type = %s where username = %s',('admin', user))
+        con.commit()
+    elif type == '4':
+        cur.execute('update cuenta set user_type = %s where username = %s',('A', user))
+        con.commit()
+    elif type == '5':
+        cur.execute('update cuenta set user_type = %s where username = %s',('B', user))
+        con.commit()
 
     #funciones de admin, muestran valores
 #albumes mas recientes
@@ -228,7 +259,7 @@ def popularGen():
     cur.execute('select genero , count(genero) from Cancion group by genero order by count(genero) desc limit 1')
     row = cur.fetchall()
     for r in row:
-        print(f"Genere: {r[0]}, Songs: {r[1]}\n")
+        print(f"Genre: {r[0]}, Songs: {r[1]}\n")
 
 #usuario mas activo
 def mostActive():

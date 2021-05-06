@@ -124,7 +124,7 @@ def adminMenu(user):
                 print("Sorry, this song is not available in this moment. \n")
         if(menu2 == 2):
             print("--------Manager Tools--------")
-            preguntaadmin = input('\n1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Reportes \n8.Exit\n')
+            preguntaadmin = input('\n1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Modify User type \n8.Reportes \n9.Exit\n')
             if preguntaadmin == '1':
                 # muestra el catalogo
                 db.catalogo()
@@ -134,8 +134,7 @@ def adminMenu(user):
             if preguntaadmin == '2':
                 # muestra el catalogo
                 # pregunta por la cancion
-                cancionmodificar = input(
-                    'Enter the song name you want to modify: \n')
+                cancionmodificar = input('Enter the song name you want to modify: \n')
                 cancioncambio = input('Enter the new value of the song : \n')
                 db.alternameSong(cancionmodificar, cancioncambio)
             if preguntaadmin == '3':
@@ -169,32 +168,116 @@ def adminMenu(user):
                     'Enter the artist name you want to delete: \n')
                 db.delartist(artistaborrar)
             if preguntaadmin == '7':
-                eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con popularidad creciente en los últimos tres meses \n3.Cantidad de nuevas suscripciones mensuales durantelos últimos seis meses \n4.Artistas con mayor producción musical \n5.Géneros más populares \n6.Usuarios más activos en la plataforma \n7. Total de reproducciones por semana \n8. Los x Artistas con mas reproducciones entre fechas \n9.Total de reproducciones por genero en las fechas \n10. Top x canciones con mas reproducciones de artista ')
+                userCambio = input('Enter the username you want to set user type to: ')
+                print("\nUser Types:\n1. Free: limited songs per day \n2. Premium Playlists and unlimited songs\n3. Admin: Controls everything\n4. A: Monitor \n5. B: Monitor")
+                typeCambio = input('Enter the number of the user type you want to set the user to: ')
+                db.modUserType(userCambio, typeCambio)
+            if preguntaadmin == '8':
+                eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con mayor producción musical \n3.Géneros más populares \n4.Usuarios más activos en la plataforma \n5. Total de reproducciones por semana \n6. Los x Artistas con mas reproducciones entre fechas \n7.Total de reproducciones por genero en las fechas \n8. Top x canciones con mas reproducciones de artista \n')
                 if eleccionreporte == '1':
                     db.albumesRecientes()
                 if eleccionreporte == '2':
-                    print('Aun en fase de desarrollo \n')
-                if eleccionreporte == '3':
-                    print('Aun en fase de desarrollo \n')
-                if eleccionreporte == '4':
                     db.mostProd()
-                if eleccionreporte == '5':
+                if eleccionreporte == '3':
                     db.popularGen()
+                if eleccionreporte == '4':
+                    db.mostActive()
+                if eleccionreporte == '5':
+                    db.mostActive()
                 if eleccionreporte == '6':
                     db.mostActive()
                 if eleccionreporte == '7':
                     db.mostActive()
                 if eleccionreporte == '8':
                     db.mostActive()
-                if eleccionreporte == '9':
-                    db.mostActive()
-                if eleccionreporte == '10':
-                    db.mostActive()
         if(menu2==3):
             break
 
 def monitorMenu(user, type):
-    if type == 'a':
-        preguntaMonitorA = input()
-    elif type == 'b':
-        preguntaMonitorB = input()
+    #monitor A
+    if type == 3:
+        print('\nMonitor A Login Successful!\n')
+        while True:
+            print("What do you want to do? ")
+            print("1. Listen to music \n2. Monitoring Tools\n3. Exit")
+            menu2 = int(input())
+            if (menu2 == 1):
+                # muestra el catalogo
+                db.catalogo()
+                # pregunta por la cancion
+                cancion = input('Enter the song number: \n')
+                if(db.searchSong(cancion)):
+                    # asigna un id automatico para mejor orden en la base
+                    cuenta = db.countSearch() + 1
+                    # crea un nuevo registro de busqueda para encontrar a los usuarios mas activos
+                    db.newSearch(cuenta, user, cancion)
+                elif(db.searchSong(cancion) == False):
+                    print("Sorry, this song is not available in this moment. \n")
+            if(menu2 ==2):
+                print('\n--------Monitoring Tools--------')
+                monA = input('\n1. Inactivate a Song \n2. Modify a Song \n3. Modify an album \n4. Unsubscribe user \n5. Exit\n')
+                if monA == '1':
+                    # muestra el catalogo
+                    db.catalogo()
+                    # pregunta por la cancion
+                    cancionborrar = input('Enter the song number you want to Inactivate: \n')
+                    db.inactiveSong(cancionborrar)
+                elif monA == '2':
+                    # muestra el catalogo
+                    # pregunta por la cancion
+                    cancionmodificar = input( 'Enter the song name you want to modify: \n')
+                    cancioncambio = input('Enter the new value of the song : \n')
+                    db.alternameSong(cancionmodificar, cancioncambio)
+                elif monA == '3':
+                    # muestra el catalogo de albums
+                    db.catalogoalbumes()
+                    # pregunta por el album a modificar
+                    albummodificar = input('Enter the album name you want to modify: \n')
+                    albumcambio = input('Enter the new value of the album : \n')
+                    db.alteralbum(albummodificar, albumcambio)
+                elif monA == '4':
+                    userCambio = input('Enter the username you want to unsubscribe: ')
+                    db.modUserType(userCambio, 'free')
+                elif(monA == '5'):
+                    break
+            elif(menu2 ==3):
+                break
+    #monitor B
+    elif type == 4:
+        print('\nMonitor B Login Successful!\n')
+        while True:
+            print("What do you want to do? ")
+            print("1. Listen to music \n2. Monitoring Tools\n3. Exit")
+            menu2 = int(input())
+            if (menu2 == 1):
+                # muestra el catalogo
+                db.catalogo()
+                # pregunta por la cancion
+                cancion = input('Enter the song number: \n')
+                if(db.searchSong(cancion)):
+                    # asigna un id automatico para mejor orden en la base
+                    cuenta = db.countSearch() + 1
+                    # crea un nuevo registro de busqueda para encontrar a los usuarios mas activos
+                    db.newSearch(cuenta, user, cancion)
+                elif(db.searchSong(cancion) == False):
+                    print("Sorry, this song is not available in this moment. \n")
+            if(menu2 ==2):
+                print('\n--------Monitoring Tools -------')
+                monB = input('\n1. Add new Monitor \n2. Platform reports \n3. Change Log \n4.Exit\n')
+                if monB == '1':
+                    userCambio = input('Enter the username you want to make Monitor: ')
+                    monType = input('Enter the monitor type (A/B): ')
+                    if monType == 'A':
+                        db.modUserType(userCambio, 'A')                    
+                    if monType == 'B':
+                        db.modUserType(userCambio, 'B')                    
+                elif monB == '2':
+                    print('Aun en desarrollo \n')
+                elif monB == '3':
+                    print('Aun en desarrollo \n')
+                elif monB == '4':
+                    break
+            if(menu2 ==3):
+                break
+
+

@@ -25,25 +25,25 @@ while(opcion):
         print("\n------Login------")
         enteruser = input('Enter your username ')
         enterpass = getpass.getpass('Enter your password ')
-        if(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 1):
-            print('Premium Login Successful!\n')
-            m.subsMenu(enteruser)
-        elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 2):
-            print('Admin Login Successful!\n')
-            m.adminMenu(enteruser)
-        # ----menus para monitores---
-        # elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 3):
-        #     print('A Monitor Login Successful\n')
-        #     m.adminMenu(enteruser)
-        # elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 4):
-        #     print('B Monitor Login Successful\n')
-        #     m.(enteruser)
-        elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 5):
-            print('Free Login Successful\n')
-            contador = 0
-            m.freeMenu(enteruser, contador)
-        else:   
-            print('Login failed\n')
-
+        #primero chquea que el usuario este en la base de datos
+        if(db.checkUser(enteruser, enterpass)):
+            #si esta en la base de datos, vemos el tipo de usuario que es
+            #la funcion checkSub devuelve un int para saber el tipo de usuario
+            userType = db.checkSub(enteruser)
+            if(userType == 1):
+                print('\nPremium Login Successful!')
+                m.subsMenu(enteruser)
+            elif(db.checkSub(enteruser) == 2):
+                print('\nAdmin Login Successful!')
+                m.adminMenu(enteruser)
+            # ----menus para monitores---
+            elif(db.checkSub(enteruser) == 3 or 4):
+                m.monitorMenu(enteruser, userType)
+            elif(userTyppe == 5):
+                print('\nFree Login Successful')
+                contador = 0
+                m.freeMenu(enteruser, contador)
+            else:   
+                print('\nLogin failed\n')
     else:
         break
