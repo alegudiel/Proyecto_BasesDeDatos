@@ -53,11 +53,11 @@ def getPlaylists(user):
     cur = con.cursor()
     cur.execute('select pl_name, id_song, nombre from playlist p inner join playlist_songs ps on p.id_playlist = ps.id_pl inner join cancion c on ps.id_song = c.id_cancion where p.pl_owner = %s', (user,))
     row = cur.fetchall()
-    if row.len() > 0:
+    if len(row) > 0:
         for r in row:
             print(f"Playlist: {r[0]}, song id: {r[1]}, Song: {r[2]}")
         return True
-    elif row.len() == 0:
+    elif len(row) == 0:
         return False
 
 #funcion para verificar el login
@@ -117,13 +117,14 @@ def newSearch(id, user, cancion):
 #buscar cancion
 def searchSong(song):
     cur = con.cursor()
-    cur.execute('select id_cancion, nombre, link, active from cancion where id_cancion = %s', (song))
+    cur.execute('select id_cancion, nombre, link, active from cancion where id_cancion = %s', (song,))
     row = cur.fetchall()
-    if r[3] == 'V':
-        for r in row:
+    for r in row:
+        if ({r[3]}) != 'V':
+            return False
+        elif ({r[3]}) == 'V':
             print(f"numero {r[0]}, nombre {r[1]}, link {r[2]} \n")
-    elif r[3] == 'F':
-        print("Sorry, this song is not available in this moment. \n")
+            return True
 
 #catalogorolas
 def catalogo():
@@ -190,7 +191,7 @@ def alterartist(song,newvalue):
 #borrar cancion
 def inactiveSong(song):
     cur = con.cursor()
-    cur.execute('update cancion set active = %s where id_cancion = song', ('F', song))
+    cur.execute('update cancion set active = %s where id_cancion = %s', ('F', song))
 
 #borrar album
 def delalbum(album):

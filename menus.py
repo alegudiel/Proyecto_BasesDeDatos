@@ -13,10 +13,13 @@ def freeMenu(user, contador):
             db.catalogo()   
             #pregunta por la cancion   
             cancion = input('Enter the song number: \n')
-            db.searchSong(cancion)
-            contador +=1
-            cuenta = db.countSearch() + 1
-            db.newSearch(cuenta, user, cancion)
+            if(db.searchSong(cancion)):
+                #asigna un id automatico para mejor orden en la base
+                cuenta = db.countSearch() + 1
+                #crea un nuevo registro de busqueda para encontrar a los usuarios mas activos
+                db.newSearch(cuenta, user, cancion)
+            elif(db.searchSong(cancion)==False):
+                print("Sorry, this song is not available in this moment. \n")
         elif(menu2 == 1 and contador == 3):
             print('Please upgrade your subscription: \n')
             subMenu()
@@ -41,11 +44,13 @@ def subsMenu(user):
             db.catalogo()   
             #pregunta por la cancion   
             cancion = input('Enter the song number: \n')
-            db.searchSong(cancion)
-            #asigna un id automatico para mejor orden en la base
-            cuenta = db.countSearch() + 1
-            #crea un nuevo registro de busqueda para encontrar a los usuarios mas activos
-            db.newSearch(cuenta, user, cancion)
+            if(db.searchSong(cancion)):
+                #asigna un id automatico para mejor orden en la base
+                cuenta = db.countSearch() + 1
+                #crea un nuevo registro de busqueda para encontrar a los usuarios mas activos
+                db.newSearch(cuenta, user, cancion)
+            elif(db.searchSong(cancion)==False):
+                print("Sorry, this song is not available in this moment. \n")
             break
         if(menu2 == 2):
             while True:
@@ -71,8 +76,10 @@ def subsMenu(user):
                         new = input('You do not have playlists, do you want to create a new one? Y/n \n')
                         if new == 'y' or 'Y':
                             id = db.countpl() + 1
-                        name = input('Playlist name \n')
-                        db.newPL(id, name, user)
+                            name = input('Playlist name \n')
+                            db.newPL(id, name, user)
+                        else:
+                            break
                 else:
                     break
         else:
@@ -103,17 +110,21 @@ def adminMenu(user):
             db.catalogo()   
             #pregunta por la cancion   
             cancion = input('Enter the song number: \n')
-            db.searchSong(cancion)
-            cuenta = db.countSearch() + 1
-            db.newSearch(cuenta, user, cancion)
+            if(db.searchSong(cancion)):
+                #asigna un id automatico para mejor orden en la base
+                cuenta = db.countSearch() + 1
+                #crea un nuevo registro de busqueda para encontrar a los usuarios mas activos
+                db.newSearch(cuenta, user, cancion)
+            elif(db.searchSong(cancion)==False):
+                print("Sorry, this song is not available in this moment. \n")
         if(menu2 == 2):
-            preguntaadmin = input('1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Reportes ')
+            preguntaadmin = input('1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Reportes \n')
             if preguntaadmin=='1':
                 #muestra el catalogo    
                 db.catalogo()
                 #pregunta por la cancion   
                 cancionborrar = input('Enter the song number you want to Inactivate: \n')
-                db.InactiveSong(cancionborrar)
+                db.inactiveSong(cancionborrar)
             if preguntaadmin=='2':
                 #muestra el catalogo    
                 #pregunta por la cancion   
