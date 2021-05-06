@@ -31,12 +31,13 @@ while(opcion):
         elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 2):
             print('Admin Login Successful\n')
             m.adminMenu(enteruser)
-        elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 3):
-            print('A Monitor Login Successful\n')
-            m.adminMenu(enteruser)
-        elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 4):
-            print('B Monitor Login Successful\n')
-            m.adminMenu(enteruser)
+        # ----menus para monitores---
+        # elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 3):
+        #     print('A Monitor Login Successful\n')
+        #     m.adminMenu(enteruser)
+        # elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 4):
+        #     print('B Monitor Login Successful\n')
+        #     m.(enteruser)
         elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 5):
             print('Free Login Successful\n')
             contador = 0

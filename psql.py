@@ -1,8 +1,6 @@
 import psycopg2
 import datetime 
 
-rn = datetime.datetime.now()
-
 #conexion a la base de datos que esta en elephntsql
 con = psycopg2.connect(
     host = 'queenie.db.elephantsql.com',
@@ -83,7 +81,7 @@ def addUser(user, password, email):
 #funcion para verificar la suscripcion
 def checkSub(user):
     cur = con.cursor()
-    cur.execute('select username, user_type from cuenta where username = %s', (user,))
+    cur.execute('select username, user_type from cuenta where username = %s', (user))
     row = cur.fetchall()
     if row[0][1] == 'premium':
         return 1
@@ -111,6 +109,7 @@ def newSub(username):
 
 #nueva busqueda
 def newSearch(id, user, cancion):
+    rn = datetime.datetime.now()
     cur = con.cursor()
     cur.execute('insert into buscador values(%s, %s, %s, %s)', (id, user, cancion, rn.strftime('%Y-%m-%d')))
     con.commit()
