@@ -9,15 +9,9 @@ while(opcion):
 #bienvenida y menu
     print('----------Welcome to SoundCity----------')
     print('1.Create account\n2. Login')
-    menu = int(input())
-    if menu == 1:
-        try:
-            int(menu)
+    menu = input()
 
-        except:
-            print('Enter a number')
-
-    if (menu == 1):
+    if (menu == '1'):
         print('------Sign Up------')
         newuser = input('Enter your username ')
         newpass = getpass.getpass('Enter your password ')

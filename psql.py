@@ -102,7 +102,7 @@ def alterSub(username, newtype):
 def newSub(username):
     cuentas = countCuentas() + 1
     cur = con.cursor()
-    cur.execute("insert into cuenta values(%s, %s, %s)", (cuentas, username, 'free'))
+    cur.execute("insert into cuenta values(%s, %s, %s, %s)", (cuentas, username, 'free', 'V'))
     con.commit()
 
 #nueva busqueda
