@@ -81,7 +81,7 @@ def addUser(user, password, email):
 #funcion para verificar la suscripcion
 def checkSub(user):
     cur = con.cursor()
-    cur.execute('select username, user_type from cuenta where username = %s', (user))
+    cur.execute('select username, user_type from cuenta where username = %s', (user,))
     row = cur.fetchall()
     if row[0][1] == 'premium':
         return 1
