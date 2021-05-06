@@ -8,7 +8,7 @@ opcion = True
 while(opcion):
 #bienvenida y menu
     print('----------Welcome to SoundCity----------')
-    print('1.Create account\n2. Login\n 3. Exit')
+    print('1. Create account\n2. Login\n3. Exit')
     menu = input()
 
     if (menu == '1'):
@@ -22,14 +22,14 @@ while(opcion):
             m.freeMenu(newuser, contador)
 
     if (menu == '2'):
-        print("------Login------")
+        print("\n------Login------")
         enteruser = input('Enter your username ')
         enterpass = getpass.getpass('Enter your password ')
         if(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 1):
-            print('Premium Login Successful\n')
+            print('Premium Login Successful!\n')
             m.subsMenu(enteruser)
         elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 2):
-            print('Admin Login Successful\n')
+            print('Admin Login Successful!\n')
             m.adminMenu(enteruser)
         # ----menus para monitores---
         # elif(db.checkUser(enteruser, enterpass) == True and db.checkSub(enteruser) == 3):
@@ -46,4 +46,4 @@ while(opcion):
             print('Login failed\n')
 
     else:
-        exit()
+        break

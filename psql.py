@@ -120,19 +120,20 @@ def searchSong(song):
     cur.execute('select id_cancion, nombre, link, active from cancion where id_cancion = %s', (song,))
     row = cur.fetchall()
     for r in row:
-        if ({r[3]}) != 'V':
+        if ({r[3]}) != {'V'}:
             return False
-        elif ({r[3]}) == 'V':
+        elif ({r[3]}) == {'V'}:
             print(f"numero {r[0]}, nombre {r[1]}, link {r[2]} \n")
             return True
 
 #catalogorolas
 def catalogo():
     cur = con.cursor()
-    cur.execute('select id_cancion, nombre, link from cancion order by id_cancion, nombre, link')
+    cur.execute('select id_cancion, nombre, artista from cancion order by id_cancion, nombre, link')
     row = cur.fetchall()
     for r in row:
-        print(f"{r[0]}, Song {r[1]}, Link {r[2]} \n")
+        print("")
+        print(f"{r[0]}, Song: {r[1]}, Artist: {r[2]} \n")
 
 #catalogoalbumes
 def catalogoalbumes():
