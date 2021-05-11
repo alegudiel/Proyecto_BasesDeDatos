@@ -6,7 +6,7 @@ create table usuario (
 
 create table cuenta (
     id_user int, primary key(id_user),
-    userName VARCHAR(30), foreign key(userName) references usuario(username),
+    userName VARCHAR(30), foreign key(userName) references usuario(username) on delete cascade,
     user_type varchar(30),
     acc_state varchar(2)
 );
@@ -41,3 +41,32 @@ create table buscador(
     id_cancion int, foreign key(id_song) references cancion(id_cancion),
     fecha_busqueda date
 );
+
+create table bitacora(
+    id serial, primary key(id),
+    fecha date,
+    admin int,
+    foreign key(admin) references cuenta(id_user),
+    accion varchar(40)
+) 
+
+create or replace function triggerRola()
+returns trigger as 
+$B0DY$
+declare rn date;
+declare quien int;
+declare donde varchar(40);
+begin
+select current_timestamp into rn;
+select updated_by from cancion into quien;
+select object_name(TG_RELID) into donde;
+insert into bitacora 
+values (rn, quien, concat(TG_OP, 'in ', donde));
+end;
+$B0DY$ language 'plpgsql';
+
+CREATE TRIGGER update_rola
+AFTER insert or UPDATE or Delete
+ON cancion
+FOR EACH ROW
+EXECUTE PROCEDURE triggerRola(); 

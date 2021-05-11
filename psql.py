@@ -117,6 +117,8 @@ def newSub(username):
 
 #nueva busqueda
 def newSearch(id, user, cancion):
+    #fecha actual para guardar registro en la base de datos
+    
     rn = datetime.datetime.now()
     cur = con.cursor()
     cur.execute('insert into buscador values(%s, %s, %s, %s)', (id, user, cancion, rn.strftime('%Y-%m-%d')))
@@ -300,3 +302,15 @@ def topArtistSongs(cant, artist):
     row = cur.fetchall()
     for r in row:
         print(f"Genere: {r[0]}, Views: {r[1]}\n")
+
+#funcion de las comisiones
+def comisiones(artist, inicio, final):
+    cur = con.cursor()
+    cur.execute('select artist, count(artist) from cancion c left join buscador b on c.id_cancion = b.id_cancion where artist = %s and fecha_busqueda between %s and %s', (artist, inicio, final))
+    row = cur.fetchall()
+    repros = row[0][1]
+    revenue = repros * 5
+    print('revenue for artist: ', artist, 'is: $', revenue)
+
+def bitacora():
+    print('bitacora')

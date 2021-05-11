@@ -141,8 +141,7 @@ def adminMenu(user):
                 # muestra el catalogo de albums
                 db.catalogoalbumes()
                 # pregunta por el album a modificar
-                albummodificar = input(
-                    'Enter the album name you want to modify: \n')
+                albummodificar = input('Enter the album name you want to modify: \n')
                 albumcambio = input('Enter the new value of the album : \n')
                 db.alteralbum(albummodificar, albumcambio)
             if preguntaadmin == '4':
@@ -237,7 +236,7 @@ def monitorMenu(user, type):
                     db.alteralbum(albummodificar, albumcambio)
                 elif monA == '4':
                     userCambio = input('Enter the username you want to unsubscribe: ')
-                    db.modUserType(userCambio, 'free')
+                    db.modUserType(userCambio, '1')
                 elif(monA == '5'):
                     break
             elif(menu2 ==3):
@@ -263,21 +262,24 @@ def monitorMenu(user, type):
                     print("Sorry, this song is not available in this moment. \n")
             if(menu2 ==2):
                 print('\n--------Monitoring Tools -------')
-                monB = input('\n1. Add new Monitor \n2. Platform reports \n3. Change Log \n4.Exit\n')
-                if monB == '1':
+                monB = input('\n1. Add new Monitor \n2. Calculate Artist revenue \n3. Change Log \n4.Exit\n')
+                if (monB == '1'):
                     userCambio = input('Enter the username you want to make Monitor: ')
                     monType = input('Enter the monitor type (A/B): ')
-                    if monType == 'A':
+                    if (monType == 'A' or 'a'):
                         db.modUserType(userCambio, 'A')                    
-                    if monType == 'B':
+                    if (monType == 'B' or 'b'):
                         db.modUserType(userCambio, 'B')                    
-                elif monB == '2':
-                    print('Aun en desarrollo \n')
-                elif monB == '3':
-                    print('Aun en desarrollo \n')
-                elif monB == '4':
+                elif (monB == '2'):
+                    print('---Search an artist to calculate the revenue he makes in ONE month---')
+                    print('Enter the date in the following format: YY-MM-DD\n')
+                    art = input('Artist: ')
+                    ini = input('Initial Date: ')
+                    fin = input('Final Date: ')
+                    db.comisiones(art, ini, fin)
+                elif (monB == '3'):
+                    db.bitacora()
+                elif (monB == '4'):
                     break
             if(menu2 ==3):
                 break
-
-

@@ -39,7 +39,7 @@ while(opcion):
             # ----menus para monitores---
             elif(db.checkSub(enteruser) == 3 or 4):
                 m.monitorMenu(enteruser, userType)
-            elif(userTyppe == 5):
+            elif(userType == 5):
                 print('\nFree Login Successful')
                 contador = 0
                 m.freeMenu(enteruser, contador)
