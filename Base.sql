@@ -59,10 +59,14 @@ $B0DY$
 declare currentDate date;
 declare currentTime time;
 declare quien int;
+declare maxDate date;
+declare maxTime time;
 begin
 select current_date into currentDate;
 select current_time into currentTime;
-select updated_by from cuenta where (lastupdatedd = (select max(lastupdatedd) from cuenta) and lastupdatedt = (select max(lastupdatedt) from cuenta)) into quien;
+select max(lastupdatedd) from cuenta into maxDate;
+select lastupdatedt from cuenta where lastupdatedd  = (select max(lastupdatedd) as maxdate from cuenta) limit 1 into maxTime;
+select updated_by from cuenta where lastupdatedd = maxDate and lastupdatedt = maxTime into quien;
 insert into bitacora 
 values (default, currentDate, currentTime, quien, 'cuenta', TG_OP , concat(cast(old as varchar), 'to ', cast(new as varchar)));
 return NEW;
@@ -75,10 +79,14 @@ $B0DY$
 declare currentDate date;
 declare currentTime time;
 declare quien int;
+declare maxDate date;
+declare maxTime time;
 begin
 select current_date into currentDate;
 select current_time into currentTime;
-select updated_by from cancion where (lastupdatedd = (select max(lastupdatedd) from cancion) and lastupdatedt = (select max(lastupdatedt) from cancion)) into quien;
+select max(lastupdatedd) from cancion into maxDate;
+select lastupdatedt from cancion where lastupdatedd  = (select max(lastupdatedd) as maxdate from cancion) limit 1 into maxTime;
+select updated_by from cancion where lastupdatedd = maxDate and lastupdatedt = maxTime into quien;
 insert into bitacora 
 values (default, currentDate, currentTime, quien, 'cancion', TG_OP , concat(cast(old as varchar), 'to ', cast(new as varchar)));
 return NEW;
@@ -90,11 +98,15 @@ returns trigger as
 $B0DY$
 declare currentDate date;
 declare currentTime time;
+declare maxDate date;
+declare maxTime time;
 declare quien int;
 begin
 select current_date into currentDate;
 select current_time into currentTime;
-select updated_by from playlist where (lastupdatedd = (select max(lastupdatedd) from playlist) and lastupdatedt = (select max(lastupdatedt) from playlist)) into quien;
+select max(lastupdatedd) from playlist into maxDate;
+select lastupdatedt from playlist where lastupdatedd  = (select max(lastupdatedd) as maxdate from playlist) limit 1 into maxTime;
+select updated_by from playlist where lastupdatedd = maxDate and lastupdatedt = maxTime into quien;
 insert into bitacora 
 values (default, currentDate, currentTime, quien, 'playlist', TG_OP , concat(cast(old as varchar), 'to ', cast(new as varchar)));
 return NEW;
