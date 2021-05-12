@@ -1,10 +1,7 @@
 import psql as db
-
-db.checkSub('admin')
+import datetime 
 
 # menu reproduccion para usuarios gratis
-
-
 def freeMenu(user, contador):
     while contador < 4:
         print("What do you want to do? ")
@@ -97,7 +94,7 @@ def subMenu():
         pregunta = input("Do you want to sub?\n1. Yes\n2. No\n")
         if pregunta == '1':
             username = input("enter your username: \n")
-            db.alterSub(username, 'premium\n')
+            db.alterSub(username, 'premium', 6)
             print('Welcome to SounCity Premium. You can now listen to unlimited songs\n')
             break
         if pregunta == '2':
@@ -105,7 +102,7 @@ def subMenu():
             break
 
 # menu de admin
-def adminMenu(user):
+def adminMenu(user, userID):
     while True:
         print("What do you want to do? ")
         print("1. Listen to music \n2. Management Tools\n3. Exit")
@@ -124,55 +121,55 @@ def adminMenu(user):
                 print("Sorry, this song is not available in this moment. \n")
         if(menu2 == 2):
             print("--------Manager Tools--------")
-            preguntaadmin = input('\n1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Modify User type \n8.Reportes \n9.Exit\n')
+            preguntaadmin = input('\n1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Modify User type \n8.Reportes \n9.Change Log \n10.Exit\n')
             if preguntaadmin == '1':
                 # muestra el catalogo
                 db.catalogo()
                 # pregunta por la cancion
                 cancionborrar = input('Enter the song number you want to Inactivate: \n')
-                db.inactiveSong(cancionborrar)
+                db.inactiveSong(cancionborrar, userID)
             if preguntaadmin == '2':
                 # muestra el catalogo
                 # pregunta por la cancion
-                cancionmodificar = input('Enter the song name you want to modify: \n')
+                db.catalogo()
+                cancionmodificar = input('Enter the song id you want to modify: \n')
                 cancioncambio = input('Enter the new value of the song : \n')
-                db.alternameSong(cancionmodificar, cancioncambio)
+                db.alternameSong(cancionmodificar, cancioncambio, userID)
             if preguntaadmin == '3':
                 # muestra el catalogo de albums
                 db.catalogoalbumes()
                 # pregunta por el album a modificar
                 albummodificar = input('Enter the album name you want to modify: \n')
                 albumcambio = input('Enter the new value of the album : \n')
-                db.alteralbum(albummodificar, albumcambio)
+                db.alteralbum(albummodificar, albumcambio, userID)
             if preguntaadmin == '4':
                 # muestra el catalogo de artistas
                 db.catalogoartistas()
                 # pregunta por el artista a modificar
-                artistamodificar = input(
-                    'Enter the artist name you want to modify: \n')
+                artistamodificar = input('Enter the artist name you want to modify: \n')
                 artistacambio = input('Enter the new value of the artist: \n')
-                db.alterartist(artistamodificar, artistacambio)
+                db.alterartist(artistamodificar, artistacambio, userID)
             if preguntaadmin == '5':
                 # muestra el catalogo de albumes
                 db.catalogoalbumes()
                 # pregunta por el album a borrar
-                albumborrar = input(
-                    'Enter the album name you want to delete: \n')
-                db.delalbum(albumborrar)
+                albumborrar = input('Enter the album name you want to delete: \n')
+                db.delalbum(albumborrar, userID)
             if preguntaadmin == '6':
                 # muestra el catalogo de artistas
                 db.catalogoartistas()
                 # pregunta por el artista a borrar
-                artistaborrar = input(
-                    'Enter the artist name you want to delete: \n')
-                db.delartist(artistaborrar)
+                artistaborrar = input('Enter the artist name you want to delete: \n')
+                db.delartist(artistaborrar, userID)
             if preguntaadmin == '7':
+                print("Current users in the platform are: ")
+                db.usuarios()
                 userCambio = input('Enter the username you want to set user type to: ')
                 print("\nUser Types:\n1. Free: limited songs per day \n2. Premium Playlists and unlimited songs\n3. Admin: Controls everything\n4. A: Monitor \n5. B: Monitor")
                 typeCambio = input('Enter the number of the user type you want to set the user to: ')
-                db.modUserType(userCambio, typeCambio)
+                db.modUserType(userCambio, typeCambio, userID)
             if preguntaadmin == '8':
-                eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con mayor producción musical \n3.Géneros más populares \n4.Usuarios más activos en la plataforma \n5. Total de reproducciones por semana \n6. Los x Artistas con mas reproducciones entre fechas \n7.Total de reproducciones por genero en las fechas \n8. Top x canciones con mas reproducciones de artista \n')
+                eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con mayor producción musical \n3.Géneros más populares \n4.Usuarios más activos en la plataforma \n5. Total de reproducciones por semana \n6. Los x Artistas con mas reproducciones entre fechas \n7. Total de reproducciones por genero en las fechas \n8. Top x canciones con mas reproducciones de artista \n')
                 if eleccionreporte == '1':
                     db.albumesRecientes()
                 if eleccionreporte == '2':
@@ -182,17 +179,33 @@ def adminMenu(user):
                 if eleccionreporte == '4':
                     db.mostActive()
                 if eleccionreporte == '5':
-                    db.mostActive()
+                    db.catalogo()
+                    song = input("Enter the song: ")
+                    inicio = input("Enter initial date in YY-MM-DD: ")
+                    array = inicio.split('-')
+                    fInicio = datetime.date(int(array[0]), int(array[1]), int(array[2]))
+                    final = fInicio + datetime.timedelta(days=7)
+                    db.weekViews(fInicio,final,song)
                 if eleccionreporte == '6':
-                    db.mostActive()
-                if eleccionreporte == '7':
-                    db.mostActive()
+                    cant = int(input("Enter the amount of artists: "))
+                    inicio = input("Enter initial date in YY-MM-DD: ")
+                    final = input("Enter final date in YY-MM-DD: ")
+                    db.dateArtists(cant, inicio, final)
+                if eleccionreporte == '7':                    
+                    genre = input("Enter the genre: ")
+                    inicio = input("Enter initial date in YY-MM-DD: ")
+                    final = input("Enter final date in YY-MM-DD: ")
+                    db.genreViewsIn(genre, inicio, final)
                 if eleccionreporte == '8':
-                    db.mostActive()
+                    cant = input("Enter the amount of songs: ")
+                    artist = input("Enter the artist: ")
+                    db.topArtistSongs(cant, artist)
+            if preguntaadmin == '9':
+                db.bitacora()
         if(menu2==3):
             break
 
-def monitorMenu(user, type):
+def monitorMenu(user, type, userID):
     #monitor A
     if type == 3:
         print('\nMonitor A Login Successful!\n')
@@ -220,23 +233,23 @@ def monitorMenu(user, type):
                     db.catalogo()
                     # pregunta por la cancion
                     cancionborrar = input('Enter the song number you want to Inactivate: \n')
-                    db.inactiveSong(cancionborrar)
+                    db.inactiveSong(cancionborrar, userID)
                 elif monA == '2':
                     # muestra el catalogo
                     # pregunta por la cancion
                     cancionmodificar = input( 'Enter the song name you want to modify: \n')
                     cancioncambio = input('Enter the new value of the song : \n')
-                    db.alternameSong(cancionmodificar, cancioncambio)
+                    db.alternameSong(cancionmodificar, cancioncambio, userID)
                 elif monA == '3':
                     # muestra el catalogo de albums
                     db.catalogoalbumes()
                     # pregunta por el album a modificar
                     albummodificar = input('Enter the album name you want to modify: \n')
                     albumcambio = input('Enter the new value of the album : \n')
-                    db.alteralbum(albummodificar, albumcambio)
+                    db.alteralbum(albummodificar, albumcambio, userID)
                 elif monA == '4':
                     userCambio = input('Enter the username you want to unsubscribe: ')
-                    db.modUserType(userCambio, '1')
+                    db.modUserType(userCambio, '1', userID)
                 elif(monA == '5'):
                     break
             elif(menu2 ==3):
@@ -264,12 +277,14 @@ def monitorMenu(user, type):
                 print('\n--------Monitoring Tools -------')
                 monB = input('\n1. Add new Monitor \n2. Calculate Artist revenue \n3. Change Log \n4.Exit\n')
                 if (monB == '1'):
+                    print('Users available: \n')
+                    db.usuarios()
                     userCambio = input('Enter the username you want to make Monitor: ')
                     monType = input('Enter the monitor type (A/B): ')
                     if (monType == 'A' or 'a'):
-                        db.modUserType(userCambio, 'A')                    
+                        db.modUserType(userCambio, '4', userID)                    
                     if (monType == 'B' or 'b'):
-                        db.modUserType(userCambio, 'B')                    
+                        db.modUserType(userCambio, '5', userID)                    
                 elif (monB == '2'):
                     print('---Search an artist to calculate the revenue he makes in ONE month---')
                     print('Enter the date in the following format: YY-MM-DD\n')

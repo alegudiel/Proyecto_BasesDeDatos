@@ -19,6 +19,7 @@ while(opcion):
         if (db.addUser(newuser, newpass, newmail) == True):
             db.newSub(newuser)
             contador = 0
+            userId = db.getUserId(newuser)
             m.freeMenu(newuser, contador)
 
     if (menu == '2'):
@@ -30,19 +31,20 @@ while(opcion):
             #si esta en la base de datos, vemos el tipo de usuario que es
             #la funcion checkSub devuelve un int para saber el tipo de usuario
             userType = db.checkSub(enteruser)
+            userId = db.getUserId(enteruser)
             if(userType == 1):
                 print('\nPremium Login Successful!')
                 m.subsMenu(enteruser)
             elif(db.checkSub(enteruser) == 2):
                 print('\nAdmin Login Successful!')
-                m.adminMenu(enteruser)
+                m.adminMenu(enteruser, userId)
             # ----menus para monitores---
             elif(db.checkSub(enteruser) == 3 or 4):
-                m.monitorMenu(enteruser, userType)
+                m.monitorMenu(enteruser, userType, userId)
             elif(userType == 5):
                 print('\nFree Login Successful')
                 contador = 0
-                m.freeMenu(enteruser, contador)
+                m.freeMenu(enteruser, contador, userId)
             else:   
                 print('\nLogin failed\n')
     else:

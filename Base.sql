@@ -45,28 +45,78 @@ create table buscador(
 create table bitacora(
     id serial, primary key(id),
     fecha date,
-    admin int,
-    foreign key(admin) references cuenta(id_user),
-    accion varchar(40)
+    hora time,
+    updated_by int,
+    foreign key(updated_by) references cuenta(id_user),
+    onTable varchar(40),
+    accion varchar(40),
+    change varchar(150)
 ) 
 
-create or replace function triggerRola()
+create or replace function updateCuenta()
 returns trigger as 
 $B0DY$
-declare rn date;
+declare currentDate date;
+declare currentTime time;
 declare quien int;
-declare donde varchar(40);
 begin
-select current_timestamp into rn;
-select updated_by from cancion into quien;
-select object_name(TG_RELID) into donde;
+select current_date into currentDate;
+select current_time into currentTime;
+select updated_by from cuenta where (lastupdatedd = (select max(lastupdatedd) from cuenta) and lastupdatedt = (select max(lastupdatedt) from cuenta)) into quien;
 insert into bitacora 
-values (rn, quien, concat(TG_OP, 'in ', donde));
+values (default, currentDate, currentTime, quien, 'cuenta', TG_OP , concat(cast(old as varchar), 'to ', cast(new as varchar)));
+return NEW;
 end;
 $B0DY$ language 'plpgsql';
 
-CREATE TRIGGER update_rola
+create or replace function updateCancion()
+returns trigger as 
+$B0DY$
+declare currentDate date;
+declare currentTime time;
+declare quien int;
+begin
+select current_date into currentDate;
+select current_time into currentTime;
+select updated_by from cancion where (lastupdatedd = (select max(lastupdatedd) from cancion) and lastupdatedt = (select max(lastupdatedt) from cancion)) into quien;
+insert into bitacora 
+values (default, currentDate, currentTime, quien, 'cancion', TG_OP , concat(cast(old as varchar), 'to ', cast(new as varchar)));
+return NEW;
+end;
+$B0DY$ language 'plpgsql';
+
+create or replace function updatePlaylist()
+returns trigger as 
+$B0DY$
+declare currentDate date;
+declare currentTime time;
+declare quien int;
+begin
+select current_date into currentDate;
+select current_time into currentTime;
+select updated_by from playlist where (lastupdatedd = (select max(lastupdatedd) from playlist) and lastupdatedt = (select max(lastupdatedt) from playlist)) into quien;
+insert into bitacora 
+values (default, currentDate, currentTime, quien, 'playlist', TG_OP , concat(cast(old as varchar), 'to ', cast(new as varchar)));
+return NEW;
+end;
+$B0DY$ language 'plpgsql';
+
+
+
+CREATE TRIGGER triggerCuenta
+AFTER insert or UPDATE or Delete
+ON cuenta
+FOR EACH ROW
+EXECUTE PROCEDURE updateCuenta(); 
+
+CREATE TRIGGER triggerCancion
 AFTER insert or UPDATE or Delete
 ON cancion
 FOR EACH ROW
-EXECUTE PROCEDURE triggerRola(); 
+EXECUTE PROCEDURE updateCancion(); 
+
+CREATE TRIGGER triggerPlaylist
+AFTER insert or UPDATE or Delete
+ON Playlist
+FOR EACH ROW
+EXECUTE PROCEDURE updatePlaylist(); 

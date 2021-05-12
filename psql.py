@@ -49,6 +49,12 @@ def countCuentas():
 
 ############################funciones de interfaz
 #funcion playlist
+def getUserId(user):
+    cur = con.cursor()
+    cur.execute('select id_user from cuenta where username = %s', (user,))
+    row = cur.fetchall()
+    return row[0][0]
+
 def getPlaylists(user):
     cur = con.cursor()
     cur.execute('select pl_name, id_song, nombre from playlist p inner join playlist_songs ps on p.id_playlist = ps.id_pl inner join cancion c on ps.id_song = c.id_cancion where p.pl_owner = %s', (user,))
@@ -103,22 +109,23 @@ def checkSub(user):
         return 5
 
 #cambiar la suscripcion
-def alterSub(username, newtype):
+def alterSub(username, newtype, modby):
+    rn = datetime.datetime.now()
     cur = con.cursor()
-    cur.execute('update cuenta set user_type = %s where username = %s', (newtype, username))
+    cur.execute('update cuenta set user_type = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s  where username = %s', (newtype, modby, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), username))
     con.commit()
 
 #agregar una nueva suscripcion a usuarios nuevos
 def newSub(username):
+    rn = datetime.datetime.now()
     cuentas = countCuentas() + 1
     cur = con.cursor()
-    cur.execute("insert into cuenta values(%s, %s, %s, %s)", (cuentas, username, 'free', 'V'))
+    cur.execute("insert into cuenta values(%s, %s, %s, %s, %s, %s, %s)", (cuentas, username, 'free', 'V', 6, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S')))
     con.commit()
 
 #nueva busqueda
 def newSearch(id, user, cancion):
     #fecha actual para guardar registro en la base de datos
-    
     rn = datetime.datetime.now()
     cur = con.cursor()
     cur.execute('insert into buscador values(%s, %s, %s, %s)', (id, user, cancion, rn.strftime('%Y-%m-%d')))
@@ -156,15 +163,22 @@ def catalogoalbumes():
 #catalogoartistas
 def catalogoartistas():
     cur = con.cursor()
-    cur.execute('select Artist')
+    cur.execute('select Artista from cancion')
     row = cur.fetchall()
     for r in row:
         print(f" Artist {r[0]}")
     
+def usuarios():
+    cur = con.cursor()
+    cur.execute('select username from cuenta')
+    row = cur.fetchall()
+    for r in row:
+        print(f" Username {r[0]}")
 #funcion de playlists
 def newPL(id, name, owner):
+    rn = datetime.datetime.now()
     cur = con.cursor()
-    cur.execute('insert into playlist values (%s, %s, %s)', (id, name, owner))
+    cur.execute('insert into playlist values (%s, %s, %s, %s, %s, %s)', (id, name, owner, owner, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S')))
     con.commit()
 
 #aniade cancion a playlist
@@ -175,68 +189,78 @@ def addToPL(id, pl_id, song_id):
 
 ############################funciones de administrador que alteran las tablas
 #agrega canciones a la base de datos
-def agregarCancion(id, name, artist, genre, time, album, date, link):
+def agregarCancion(id, name, artist, genre, time, album, date, link, modBy):
+    rn = datetime.datetime.now()
     cur = con.cursor()
-    cur.execute('insert into cancion values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (id, name, artist, genre, time, album, date, link, 'V'))
+    cur.execute('insert into cancion values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (id, name, artist, genre, time, album, date, link, 'V', modBy, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S')))
     con.commit()
 
 #modifica una cancion
-def alterSong(song, newvalue):
+def alterSong(song, newvalue, username):
+    rn = datetime.datetime.now()
     cur = con.cursor()
-    cur.execute('update cancion set artista = %s where id_cancion = %s', (newvalue, song))
+    cur.execute('update cancion set artista = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s  where id_cancion = %s', (newvalue, username, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), song))
     con.commit()
 
 #modifica un album
-def alteralbum(song,newvalue):
+def alteralbum(song,newvalue, username):
+    rn = datetime.datetime.now()
     cur=con.cursor()
-    cur.execute('update cancion set album = %s where id_cancion = %s',(newvalue , song))
+    cur.execute('update cancion set album = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where id_cancion = %s',(newvalue, username, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), song))
     con.commit()
 
 #modifica una cancion
-def alternameSong(song,newvalue):
+def alternameSong(song,newvalue, username):
+    rn = datetime.datetime.now()
     cur = con.cursor()
-    cur.execute('update cancion set nombre = %s where id_cancion = %s', (newvalue , song))
+    cur.execute('update cancion set nombre = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where id_cancion = %s', (newvalue, username, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), song))
     con.commit()
 
 #modifica un artista
-def alterartist(song,newvalue):
+def alterartist(song,newvalue, username):
+    rn = datetime.datetime.now()
     cur = con.cursor()
-    cur.execute('update cancion set artista = %s where id_cancion= %s', (newvalue , song))
+    cur.execute('update cancion set artista = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where id_cancion= %s', (newvalue, username, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), song))
     con.commit()
 
-#borrar cancion
-def inactiveSong(song):
+#inactivar cancion
+def inactiveSong(song, username):
+    rn = datetime.datetime.now()
     cur = con.cursor()
-    cur.execute('update cancion set active = %s where id_cancion = %s', ('F', song))
+    cur.execute('update cancion set active = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where id_cancion = %s', ('F', username, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), song))
     con.commit()
 
 #borrar album
-def delalbum(album):
+def delalbum(album, username):
+    rn = datetime.datetime.now()
     cur = con.cursor()
+    cur.execute('update Album set updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where nombre = %s',(username, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), album))
+    con.commit()
     cur.execute('delete from Album where nombre = %s',(album))
 
 #borrar artista
-def delartist(artist):
+def delartist(artist, username):
+    rn = datetime.datetime.now()
     cur = con.cursor()
-    cur.execute('delete from Artist where nombre = %s',(artist))
+    cur.execute('update cancion set updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where artista = %s',(username, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), artist))
+    con.commit()
+    cur.execute('delete from cancion where artista = %s',(artist))
+    con.commit()
 
-def modUserType(user, type):
+def modUserType(user, type, modBY):
+    rn = datetime.datetime.now()
     cur = con.cursor()
     if type == '1':
-        cur.execute('update cuenta set user_type = %s where username = %s',('free', user))
-        con.commit()
+        cur.execute('update cuenta set user_type = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where username = %s', ('free', modBY, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), user))
     elif type == '2':
-        cur.execute('update cuenta set user_type = %s where username = %s',('premium', user))
-        con.commit()
+        cur.execute('update cuenta set user_type = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where username = %s', ('premium', modBY, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), user))
     elif type == '3':
-        cur.execute('update cuenta set user_type = %s where username = %s',('admin', user))
-        con.commit()
+        cur.execute('update cuenta set user_type = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where username = %s', ('admin', modBY, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), user))
     elif type == '4':
-        cur.execute('update cuenta set user_type = %s where username = %s',('A', user))
-        con.commit()
+        cur.execute('update cuenta set user_type = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where username = %s', ('A', modBY, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), user))
     elif type == '5':
-        cur.execute('update cuenta set user_type = %s where username = %s',('B', user))
-        con.commit()
+        cur.execute('update cuenta set user_type = %s, updated_by = %s, lastupdatedd = %s, lastupdatedt = %s where username = %s', ('B', modBY, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), user))
+    con.commit()
 
     #funciones de admin, muestran valores
 #albumes mas recientes
@@ -272,9 +296,9 @@ def mostActive():
         print(f"Username {r[0]}, Searches {r[1]}\n")
 
 #total de reproducciones por semana
-def weekViews(inicio, final):
+def weekViews(inicio, final, song):
     cur = con.cursor()
-    cur.execute('Select nombre, count(nombre) from buscador right join cancion on id_cancion = id_cancion where fecha_busqueda in between %s and %s', (inicio, final))
+    cur.execute('Select nombre, count(nombre) from buscador b right join cancion c on b.id_cancion = c.id_cancion where nombre = %s and b.fecha_busqueda between %s and %s group by c.nombre order by count(c.nombre) desc', (song, inicio, final))
     row = cur.fetchall()
     for r in row:
         print(f"Song: {r[0]}, Views This week: {r[1]}\n")
@@ -282,15 +306,15 @@ def weekViews(inicio, final):
 #x artistas con mas reproducciones entre la fecha
 def dateArtists(cant, inicio, final):
     cur = con.cursor()
-    cur.execute('Select artist, count(id_cancion) from buscador right join cancion on id_cancion = id_cancion where fecha_busqueda in between %s and %s limit %s', (inicio, final, cant))
+    cur.execute('Select artista, count(artista) from buscador b right join cancion c on b.id_cancion = c.id_cancion where fecha_busqueda between %s and %s group by artista order by count(artista) desc limit %s', (inicio, final, cant))
     row = cur.fetchall()
     for r in row:
-        print(f"Artista: {r[0]}, Reproducciones: {r[1]}\n")
+        print(f"\nArtista: {r[0]}, Reproducciones: {r[1]}\n")
 
 #reproducciones de genero en las fechas ingresadas
 def genreViewsIn(genre, inicio, final):
     cur = con.cursor()
-    cur.execute('Select genre, count(genre) from buscador right join cancion on id_cancion = id_cancion where genre = %s and fecha_busqueda in between %s and %s ', (genre, inicio, final))
+    cur.execute('Select genero, count(genero) from buscador b right join cancion c on b.id_cancion = c.id_cancion where genero = %s and fecha_busqueda between %s and %s group by genero', (genre, inicio, final))
     row = cur.fetchall()
     for r in row:
         print(f"Genere: {r[0]}, Views: {r[1]}\n")
@@ -298,19 +322,23 @@ def genreViewsIn(genre, inicio, final):
 #Top x canciones con mas reproducciones de artista
 def topArtistSongs(cant, artist):
     cur = con.cursor()
-    cur.execute('Select nombre, artista, count(nombre) from buscador right join cancion on id_cancion = id_cancion where artista = %s limit %s', (artist, cant))
+    cur.execute('Select nombre, artista, count(nombre) from buscador b right join cancion c on b.id_cancion = c.id_cancion where artista = %s group by nombre, artista order by count desc limit %s', (artist, cant))
     row = cur.fetchall()
     for r in row:
-        print(f"Genere: {r[0]}, Views: {r[1]}\n")
+        print(f"Song: {r[0]}, Artist: {r[1]}, views: {r[2]}\n")
 
 #funcion de las comisiones
 def comisiones(artist, inicio, final):
     cur = con.cursor()
-    cur.execute('select artist, count(artist) from cancion c left join buscador b on c.id_cancion = b.id_cancion where artist = %s and fecha_busqueda between %s and %s', (artist, inicio, final))
+    cur.execute('select artista, count(artista) from cancion c left join buscador b on c.id_cancion = b.id_cancion where artista = %s and fecha_busqueda between %s and %s', (artist, inicio, final))
     row = cur.fetchall()
     repros = row[0][1]
-    revenue = repros * 5
+    revenue = repros * 0.5
     print('revenue for artist: ', artist, 'is: $', revenue)
 
 def bitacora():
-    print('bitacora')
+    cur = con.cursor()
+    cur.execute('select accion, fecha, hora, username, change from bitacora b inner join cuenta c on b.updated_by = c.id_user order by fecha')
+    row = cur.fetchall()
+    for r in row:
+        print(f'\nAction: {r[0]}, Date:{r[1]}, Time:{r[2]}, modified By:{r[3]}, change:{r[4]}')
