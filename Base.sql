@@ -132,3 +132,15 @@ AFTER insert or UPDATE or Delete
 ON Playlist
 FOR EACH ROW
 EXECUTE PROCEDURE updatePlaylist(); 
+
+create index BitacoraIndex
+on bitacora (id, fecha, hora, updated_by, accion)
+
+create index indexcuenta 
+on Cuenta(id_usuario, user_type,update_by)
+
+create index indenxplaylist 
+on Playlist(id_playlist, dueño,update_by)
+
+create index indexcancion 
+on Cancion(id_cancion, album,genero,artista,fecha_lanzamiento,nombre,update_by)
