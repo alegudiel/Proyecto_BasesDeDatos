@@ -330,11 +330,12 @@ def topArtistSongs(cant, artist):
 #funcion de las comisiones
 def comisiones(artist, inicio, final):
     cur = con.cursor()
-    cur.execute('select artista, count(artista) from cancion c left join buscador b on c.id_cancion = b.id_cancion where artista = %s and fecha_busqueda between %s and %s', (artist, inicio, final))
+    cur.execute('select artista, count(artista) from cancion c left join buscador b on c.id_cancion = b.id_cancion where artista = %s and fecha_busqueda between %s and %s group by c.artista', (artist, inicio, final))
     row = cur.fetchall()
     repros = row[0][1]
     revenue = repros * 0.5
-    print('revenue for artist: ', artist, 'is: $', revenue)
+    for r in row:
+        print(f'revenue for artist: {r[0]}, is: $', revenue)
 
 def bitacora():
     cur = con.cursor()
