@@ -343,3 +343,9 @@ def bitacora():
     row = cur.fetchall()
     for r in row:
         print(f'\nAction: {r[0]}, Date:{r[1]}, Time:{r[2]}, modified By:{r[3]}, change:{r[4]}')
+
+def userListenings(user, date):
+    cur = con.cursor()
+    cur.execute('select c.nombre, b.fecha_busqueda from buscador b left join cancion c on b.id_cancion = c.id_cancion where usuario = %s and fecha_busqueda < %s order by b.fecha_busqueda desc',(user, date))
+    row = cur.fetchall()
+    return row
