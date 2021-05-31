@@ -25,9 +25,12 @@ def countpl():
 
 def getUsers():
     cur = con.cursor()
-    cur.execute('SELECT username from cuenta where account_state = "V"')
+    cur.execute('SELECT username from cuenta where account_state = %s', ('V'))
     row = cur.fetchall()
-    return row
+    newarray = []
+    for x in row:
+        newarray.append(x[0])
+    return newarray
 
 
 def countpls():
@@ -464,8 +467,6 @@ def userListenings(user, date):
     return row
 
 # funciones de la parte final (3)
-
-
 def genSongs(qty, userID):
     songsGend = 0
     cantCanciones = countSongs()
