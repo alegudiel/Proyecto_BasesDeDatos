@@ -6,10 +6,6 @@ db = pymongo.MongoClient("mongodb+srv://admin:<admin>@cluster0.zgaqv.mongodb.net
 db = myclient["proyecto"] 
 listenings = db["Listenings"]
 
-#simulacion de operacion 
-#def reproducirCancionesRandom:
-
-
 #admin puede ver las canciones reproducidas en cierta fecha
 def genUserListenings(user, canciones):
     now = datetime.datetime.now()
