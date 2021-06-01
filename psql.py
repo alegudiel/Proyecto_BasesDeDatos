@@ -1,7 +1,6 @@
 import psycopg2
 import datetime
 from random import randint, choice, random
-from tests import NewTracks
 
 # conexion a la base de datos que esta en elephntsql
 con = psycopg2.connect(
@@ -459,10 +458,10 @@ def bitacora():
         print(
             f'\nAction: {r[0]}, Date:{r[1]}, Time:{r[2]}, modified By:{r[3]}, change:{r[4]}')
 
-
+#devuelve un array con las canciones escuchadas por el usuario en las fechas dadas
 def userListenings(user, date):
     cur = con.cursor()
-    cur.execute('select c.nombre, b.fecha_busqueda from buscador b left join cancion c on b.id_cancion = c.id_cancion where usuario = %s and fecha_busqueda < %s order by b.fecha_busqueda desc', (user, date))
+    cur.execute('select c.nombre, count(b.id_cancion) as repros from buscador b left join cancion c on b.id_cancion = c.id_cancion where usuario = %s and fecha_busqueda < %s group by c.nombre, b.fecha_busqueda order by b.fecha_busqueda desc', (user, date))
     row = cur.fetchall()
     return row
 
@@ -483,7 +482,8 @@ def genSongs(qty, userID):
         con.commit()
         NewTracks.pop(larola)
         songsGend += 1
-#para generar las reproducciones segun la info del usuario
+
+#para generar las reproducciones aleatorias
 def genListenings(qty):
     counter = 0
     usuarios = getUsers()
