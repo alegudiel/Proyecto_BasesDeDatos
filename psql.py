@@ -467,6 +467,7 @@ def userListenings(user, date):
     return row
 
 # funciones de la parte final (3)
+#para sacar las canciones random
 def genSongs(qty, userID):
     songsGend = 0
     cantCanciones = countSongs()
@@ -482,7 +483,7 @@ def genSongs(qty, userID):
         con.commit()
         NewTracks.pop(larola)
         songsGend += 1
-
+#para generar las reproducciones segun la info del usuario
 def genListenings(qty):
     counter = 0
     usuarios = getUsers()
@@ -491,4 +492,12 @@ def genListenings(qty):
         larola = randint(1, cantCanciones)
         newID = countSearch() +1
         newSearch(newID, choice(usuarios), larola)
-        counter += 1 
+        counter += 1
+        
+#jalar la info del csv
+def cancionesPan():
+    import pandas as pd
+    with open("songs.csv", encoding="utf-8" ) as f:
+        texto = f.read()
+    f.close()
+    cancion = texto.split("\n")

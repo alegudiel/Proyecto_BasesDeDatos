@@ -105,7 +105,7 @@ def subMenu():
 def adminMenu(user, userID):
     while True:
         print("What do you want to do? ")
-        print("1. Listen to music \n2. Management Tools\n3. Exit")
+        print("1. Listen to music \n2. Management Tools\n3. Automatic listenings\n4. Exit")
         menu2 = int(input())
         if (menu2 == 1):
             # muestra el catalogo
@@ -203,6 +203,8 @@ def adminMenu(user, userID):
             if preguntaadmin == '9':
                 db.bitacora()
         if(menu2==3):
+            print("Welcome, in this section you will generate some automatic listenings\n")
+        if(menu2==4):
             break
 
 def monitorMenu(user, type, userID):
