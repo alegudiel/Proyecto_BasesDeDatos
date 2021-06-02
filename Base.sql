@@ -134,13 +134,87 @@ FOR EACH ROW
 EXECUTE PROCEDURE updatePlaylist(); 
 
 create index BitacoraIndex
-on bitacora (id, fecha, hora, updated_by, accion)
+on bitacora (id, fecha, hora, updated_by, accion);
 
 create index indexcuenta 
-on Cuenta(id_usuario, user_type,update_by)
+on Cuenta(id_usuario, user_type,update_by);
 
 create index indenxplaylist 
-on Playlist(id_playlist, dueño,update_by)
+on Playlist(id_playlist, dueño,update_by);
 
 create index indexcancion 
-on Cancion(id_cancion, album,genero,artista,fecha_lanzamiento,nombre,update_by)
+on Cancion(id_cancion, album,genero,artista,fecha_lanzamiento,nombre,update_by);
+
+select c.genero, count(c.genero) as conteo
+from buscador b left join cancion c on b.id_cancion = c.id_cancion 
+group by c.genero
+order by conteo desc
+
+select c.artista, count(c.artista) as conteo
+from buscador b left join cancion c on b.id_cancion = c.id_cancion 
+group by c.artista
+order by conteo desc
+
+select c.nombre, count(c.nombre) as conteo
+from buscador b left join cancion c on b.id_cancion = c.id_cancion 
+group by c.nombre
+order by conteo desc
+
+insert into cuenta values(7, 'Coca', 'premium', 'V', 6, '2021-06-01', '18:13:32'),
+(10, 'Paris', 'free', 'V', 6, '2021-06-01', '18:13:32'),
+(12, 'Checha', 'premium', 'V', 6, '2021-06-01', '18:13:32'),
+(13, 'Lowel', 'free', 'V', 6, '2021-06-01', '18:13:32'),
+(14, 'Nukkye', 'premium', 'V', 6, '2021-06-01', '18:13:32'),
+(15, 'Derke', 'free', 'V', 6, '2021-06-01', '18:13:32'),
+(16, 'Boaster', 'premium', 'V', 6, '2021-06-01', '18:13:32'),
+(17, 'RAINMAKER', 'free', 'V', 6, '2021-06-01', '18:13:32');
+
+insert into usuario values
+('Coca', 'ElBicho', 'LostVayne@sinonimous.com'),
+('Paris', 'bestoCypherCA', 'GilThunder@sinonimous.com'),
+('Checha', 'bestoSovaLATAM', 'ChechaCorman@sinonimous.com'),
+('Lowel', 'altocapi', 'lowelcs@heretics.es'),
+('Nukkye', 'bestoDueristo', 'Nukkye@G2.com.eu'),
+('Derke', 'bestoJett', 'NikitaS@FNATIC.eu'),
+('Boaster', 'bestoPerson', 'JakeHowlett@FNC.com'),
+('RAINMAKER', 'idolo', 'hacedordelluvia@infinity.com.es');
+
+insert into cancion VALUES(10, 'Ay3', 'Ayo & Teo', 'Trap', '3:15', 'Ay3', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(11, 'Glimmer', 'LIONE', 'Chill', '4:21', 'Glimmer', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(12, 'Last Time', 'Lxst', 'Trap', '2:49', 'Lost', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(13, 'When I Get There', 'Big Gigantic', 'Chill', '3:40', 'Invincible EP', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(14, 'Youth', 'Dabin', 'Chill', '4:24', 'Wild Youth', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(15, 'Incomplete', 'Aero Chord', 'Chill', '4:18', 'Incomplete', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(16, 'Get Your Wish', 'Porter Robinson', 'Chill', '3:38', 'Nurture', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(17, 'Do You Understand?', 'Shy Glizzy', 'trap', '4:10', 'Do You Understand?', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(18, 'Rooms', 'WRLD', 'Chill', '3:23', 'Rooms EP', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(19, 'Explore', 'Cosa Ky', 'Trap', '3:36', 'Explore', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(20, 'Lust', 'Lil Skies', 'Trap', '2:36', 'Life of A Dark Rose', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(21, 'MICHUUL', 'Duckwrth', 'Pop', '3:06', 'an XTRA UGLY Mixtape', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(22, 'Stars', 'Sky', 'Pop', '3:50', 'Stars', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(23, 'Brutal', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(24, 'Good 4 u', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(25, 'Traitor', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(26, 'Drivers license', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(27, 'Deja vu', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(28, 'Enough for you', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(29, '1 step forward 3 steps back', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(30, 'Happier', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(31, 'Favorite crime', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(32, 'Hope ur ok', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(33, 'Jealousy jealousy', 'Olivia Rodrigo', 'pop', '3:41', 'sour', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(34, 'Ni bien ni mal', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(35, '200 mph', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(36, 'Quien tu eres', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(37, 'Caro', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(38, 'Tenemos que hablar', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(39, 'Otra noche en Miami', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(40, 'Ser bichote', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(41, 'Si estuviésemos juntos', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(42, 'Solo de mi', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(43, 'Cuando perriabas', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(44, 'La Romana', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(45, 'Como antes', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(46, 'Estamos bien', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(47, 'Mia', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35'),
+(48, 'RLNDT', 'Bad Bunny', 'reggaeton', '2:53', 'X100pre', '2021-05-31', 'youtube.com', 'F', 6, '2021-06-01', '20:27:35');

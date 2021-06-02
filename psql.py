@@ -31,7 +31,6 @@ def getUsers():
         newarray.append(x[0])
     return newarray
 
-
 def countpls():
     contador = 0
     cur = con.cursor()
@@ -174,6 +173,17 @@ def newSearch(id, user, cancion):
     cur.execute('insert into buscador values(%s, %s, %s, %s)',
                 (id, user, cancion, rn.strftime('%Y-%m-%d')))
     con.commit()
+
+# busqueda simulada
+
+
+def simulSearch(id, user, cancion, dategg):
+    # fecha actual para guardar registro en la base de datos
+    rn = datetime.datetime.now()
+    cur = con.cursor()
+    cur.execute('insert into buscador values(%s, %s, %s, %s)', (id, user, cancion, dategg))
+    con.commit()
+
 
 # buscar cancion
 
@@ -461,39 +471,45 @@ def bitacora():
 #devuelve un array con las canciones escuchadas por el usuario en las fechas dadas
 def userListenings(user, date):
     cur = con.cursor()
-    cur.execute('select c.nombre, count(b.id_cancion) as repros from buscador b left join cancion c on b.id_cancion = c.id_cancion where usuario = %s and fecha_busqueda < %s group by c.nombre, b.fecha_busqueda order by b.fecha_busqueda desc', (user, date))
+    cur.execute('select c.nombre, count(b.id_cancion) as repros from buscador b left join cancion c on b.id_cancion = c.id_cancion where usuario ilike %s and fecha_busqueda < %s group by c.nombre, b.fecha_busqueda order by b.fecha_busqueda desc', (user, date))
     row = cur.fetchall()
     return row
 
 # funciones de la parte final (3)
-#para sacar las canciones random
-def genSongs(qty, userID):
-    songsGend = 0
-    cantCanciones = countSongs()
-    rn = datetime.datetime.now()
 
-    while songsGend <= qty:
-        sonIg = countSongs() + 1
-        larola = randint(1, cantCanciones)
-        cur = con.cursor()
-        cur.execute('insert into cancion(%s, %s, %s, %s, %s, %s, %s, "youtube.com", "V", %s, %s, %s)',
-                    (sonIg, NewTracks[larola][0], NewTracks[larola][1], NewTracks[larola][2], NewTracks[larola][3],
-                     NewTracks[larola][4],rn.strftime('%Y-%m-%d'), userID, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S')))
-        con.commit()
-        NewTracks.pop(larola)
-        songsGend += 1
+def notActive():
+    newarray = list()
+    cur = con.cursor()
+    cur.execute("select id_cancion from cancion where active = 'F'")
+    row = cur.fetchall()
+    for x in row:
+        newarray.append(int(x[0]))
+    return newarray
+
+#para sacar las canciones random
+def genSongs(qty, adminId):
+    cur = con.cursor()
+    rn = datetime.datetime.now()
+    notActiveSongs = notActive()
+    counter = 0
+    while counter < qty:
+        index = randint(0, len(notActiveSongs))
+        newSong = notActiveSongs.pop(index)
+        cur.execute("update cancion set active = 'V', updated_by = %s, lastupdatedd = %s, lastupdatedt=%s where id_cancion = %s", (adminId, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), newSong))
+    con.commit()
 
 #para generar las reproducciones aleatorias
-def genListenings(qty):
+def genListenings(qty, date):
     counter = 0
     usuarios = getUsers()
     cantCanciones = countSongs()
     while counter <= qty:
         larola = randint(1, cantCanciones)
         newID = countSearch() +1
-        newSearch(newID, choice(usuarios), larola)
+        simulSearch(newID, choice(usuarios), larola, date)
         counter += 1
-        
+
+
 #jalar la info del csv
 def cancionesPan():
     import pandas as pd

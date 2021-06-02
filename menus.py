@@ -1,5 +1,8 @@
 import psql as db
-import datetime 
+import datetime
+import mongo as mdb
+
+# try catch para fechas e ints de los menus
 
 # menu reproduccion para usuarios gratis
 def freeMenu(user, contador):
@@ -32,6 +35,8 @@ def freeMenu(user, contador):
             break
 
 # menu reproduccion usuarios suscritos
+
+
 def subsMenu(user):
     while True:
         print("\nCurrent Subscription: Premium\n")
@@ -52,7 +57,8 @@ def subsMenu(user):
                 print("Sorry, this song is not available in this moment. \n")
         if(menu2 == 2):
             while True:
-                de = int(input('\n1. Create Playlist \n2. Add Song to Playlist \n3. Show Playlists\n4. Exit\n'))
+                de = int(input(
+                    '\n1. Create Playlist \n2. Add Song to Playlist \n3. Show Playlists\n4. Exit\n'))
                 if de == 1:
                     pid = db.countpl() + 1
                     name = input('Playlist name \n')
@@ -73,9 +79,11 @@ def subsMenu(user):
                             # crea un nuevo registro de busqueda para encontrar a los usuarios mas activos
                             db.newSearch(cuenta, user, cancion)
                         elif(db.searchSong(cancion) == False):
-                            print("Sorry, this song is not available in this moment. \n")
+                            print(
+                                "Sorry, this song is not available in this moment. \n")
                     else:
-                        new = input('You do not have playlists, do you want to create a new one? Y/n \n')
+                        new = input(
+                            'You do not have playlists, do you want to create a new one? Y/n \n')
                         if new == 'y' or 'Y':
                             id = db.countpl() + 1
                             name = input('Playlist name \n')
@@ -84,10 +92,12 @@ def subsMenu(user):
                             break
                 else:
                     break
-        if(menu2==3):
+        if(menu2 == 3):
             break
 
 # menu para suscribirse
+
+
 def subMenu():
     while True:
         print("\nCurrent Subscription: free\n")
@@ -102,16 +112,18 @@ def subMenu():
             break
 
 # menu de admin
+
+
 def adminMenu(user, userID):
     while True:
         print("What do you want to do? ")
-        print("1. Listen to music \n2. Management Tools\n3. Automatic listenings\n4. Exit")
+        print("1. Listen to music \n2. Management Tools\n3. Automatic listenings\n4. Add New Random songs \n5. Save users' listenings\n6. Exit\n")
         menu2 = int(input())
         if (menu2 == 1):
             # muestra el catalogo
             db.catalogo()
             # pregunta por la cancion
-            cancion = input('Enter the song number: \n')
+            cancion = input('Enter the song number: ')
             if(db.searchSong(cancion)):
                 # asigna un id automatico para mejor orden en la base
                 cuenta = db.countSearch() + 1
@@ -119,54 +131,63 @@ def adminMenu(user, userID):
                 db.newSearch(cuenta, user, cancion)
             elif(db.searchSong(cancion) == False):
                 print("Sorry, this song is not available in this moment. \n")
-        if(menu2 == 2):
+        elif(menu2 == 2):
             print("--------Manager Tools--------")
-            preguntaadmin = input('\n1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Modify User type \n8.Reportes \n9.Change Log \n10.Exit\n')
+            preguntaadmin = input(
+                '\n1.Inactivate a Song \n2.Modify a Song \n3.Modify an album \n4.Modify an artist \n5.Delete an album \n6.Delete an artist \n7.Modify User type \n8.Reportes \n9.Change Log \n10.Exit\n')
             if preguntaadmin == '1':
                 # muestra el catalogo
                 db.catalogo()
                 # pregunta por la cancion
-                cancionborrar = input('Enter the song number you want to Inactivate: \n')
+                cancionborrar = input(
+                    'Enter the song number you want to Inactivate: \n')
                 db.inactiveSong(cancionborrar, userID)
             if preguntaadmin == '2':
                 # muestra el catalogo
                 # pregunta por la cancion
                 db.catalogo()
-                cancionmodificar = input('Enter the song id you want to modify: \n')
+                cancionmodificar = input(
+                    'Enter the song id you want to modify: \n')
                 cancioncambio = input('Enter the new value of the song : \n')
                 db.alternameSong(cancionmodificar, cancioncambio, userID)
             if preguntaadmin == '3':
                 # muestra el catalogo de albums
                 db.catalogoalbumes()
                 # pregunta por el album a modificar
-                albummodificar = input('Enter the album name you want to modify: \n')
+                albummodificar = input(
+                    'Enter the album name you want to modify: \n')
                 albumcambio = input('Enter the new value of the album : \n')
                 db.alteralbum(albummodificar, albumcambio, userID)
             if preguntaadmin == '4':
                 # muestra el catalogo de artistas
                 db.catalogoartistas()
                 # pregunta por el artista a modificar
-                artistamodificar = input('Enter the artist name you want to modify: \n')
+                artistamodificar = input(
+                    'Enter the artist name you want to modify: \n')
                 artistacambio = input('Enter the new value of the artist: \n')
                 db.alterartist(artistamodificar, artistacambio, userID)
             if preguntaadmin == '5':
                 # muestra el catalogo de albumes
                 db.catalogoalbumes()
                 # pregunta por el album a borrar
-                albumborrar = input('Enter the album name you want to delete: \n')
+                albumborrar = input(
+                    'Enter the album name you want to delete: \n')
                 db.delalbum(albumborrar, userID)
             if preguntaadmin == '6':
                 # muestra el catalogo de artistas
                 db.catalogoartistas()
                 # pregunta por el artista a borrar
-                artistaborrar = input('Enter the artist name you want to delete: \n')
+                artistaborrar = input(
+                    'Enter the artist name you want to delete: \n')
                 db.delartist(artistaborrar, userID)
             if preguntaadmin == '7':
                 print("Current users in the platform are: ")
                 db.usuarios()
-                userCambio = input('Enter the username you want to set user type to: ')
+                userCambio = input(
+                    'Enter the username you want to set user type to: ')
                 print("\nUser Types:\n1. Free: limited songs per day \n2. Premium Playlists and unlimited songs\n3. Admin: Controls everything\n4. A: Monitor \n5. B: Monitor")
-                typeCambio = input('Enter the number of the user type you want to set the user to: ')
+                typeCambio = input(
+                    'Enter the number of the user type you want to set the user to: ')
                 db.modUserType(userCambio, typeCambio, userID)
             if preguntaadmin == '8':
                 eleccionreporte = input('\n1.Albumes mas recientes \n2.Artistas con mayor producción musical \n3.Géneros más populares \n4.Usuarios más activos en la plataforma \n5. Total de reproducciones por semana \n6. Los x Artistas con mas reproducciones entre fechas \n7. Total de reproducciones por genero en las fechas \n8. Top x canciones con mas reproducciones de artista \n')
@@ -183,15 +204,16 @@ def adminMenu(user, userID):
                     song = input("Enter the song: ")
                     inicio = input("Enter initial date in YY-MM-DD: ")
                     array = inicio.split('-')
-                    fInicio = datetime.date(int(array[0]), int(array[1]), int(array[2]))
+                    fInicio = datetime.date(
+                        int(array[0]), int(array[1]), int(array[2]))
                     final = fInicio + datetime.timedelta(days=7)
-                    db.weekViews(fInicio,final,song)
+                    db.weekViews(fInicio, final, song)
                 if eleccionreporte == '6':
                     cant = int(input("Enter the amount of artists: "))
                     inicio = input("Enter initial date in YY-MM-DD: ")
                     final = input("Enter final date in YY-MM-DD: ")
                     db.dateArtists(cant, inicio, final)
-                if eleccionreporte == '7':                    
+                if eleccionreporte == '7':
                     genre = input("Enter the genre: ")
                     inicio = input("Enter initial date in YY-MM-DD: ")
                     final = input("Enter final date in YY-MM-DD: ")
@@ -202,13 +224,92 @@ def adminMenu(user, userID):
                     db.topArtistSongs(cant, artist)
             if preguntaadmin == '9':
                 db.bitacora()
-        if(menu2==3):
-            print("Welcome, in this section you will generate some automatic listenings\n")
-        if(menu2==4):
+        elif(menu2 == 3):
+            print(
+                "Welcome, in this section you will generate some automatic listenings\n")
+            cantRepros = int(
+                input("Enter the ammount of listenings to generate "))
+            while True:
+                datepreg = input(
+                    "Do you want to generate listengings on today's date? Y/N ").lower()
+                if(datepreg == 'y'):
+                    rn = datetime.datetime.now().strftime('%Y-%m-%d')
+                    print("Generating listenings, please wait...")
+                    db.genListenings(cantRepros, rn)
+                    print("Listenings generated! \n")
+                    break
+                elif(datepreg == 'n'):
+                    listDate = input("Please enter the date as YYYY-MM-DD ")
+                    print("Generating listenings, please wait...")
+                    db.genListenings(cantRepros, listDate)
+                    print("Listenings generated! \n")
+                    break
+                else:
+                    print("Enter a valid option \n")
+        elif(menu2 == 4):
+            print("Add new random songs to the platform. ")
+            qtySongs = int(input("Please enter the quantity of new songs you want to generate. "))
+            print("Generating songs, please wait...")
+            db.genSongs(qtySongs, userID)
+            print(qtySongs, ' new songs are now active on the platform! \n')
+        elif(menu2 == 5):
+            print("Save user's listenings")
+            while True:
+                menu7 = input("Would you like to save all users' listenings? Y/N ").lower()
+                if(menu7 == 'y'):
+                    while True:
+                        fechpreg = input("\nGenerate views up to this date? Y/N ").lower()
+                        if(fechpreg == 'y'):
+                            listDate = datetime.datetime.now().strftime('%Y-%m-%d')
+                            print("Processing, please wait...\n")
+                            allUsers = db.getUsers()
+                            for u in allUsers:
+                                userRolas = db.userListenings(u, listDate)
+                                mdb.genUserListenings(u, userRolas, listDate)
+                            print("All users' listenings saved! \n")
+                            break
+                        elif(fechpreg == 'n'):
+                            listDate = input("Please enter the date as YYYY-MM-DD ")
+                            for u in allUsers:
+                                userRolas = db.userListenings(u, listDate)
+                                mdb.genUserListenings(u, userRolas, listDate)
+                            print("All users' listenings saved! \n")
+                            break
+                        else:
+                            print("Enter a valid option \n")
+                        break
+                elif(menu7 == 'n'):
+                    print(db.getUsers())
+                    listUser = input("Enter the username. ")
+                    while True:
+                        fechpreg = input("\nGenerate views up to this date? Y/N ").lower()
+                        if(fechpreg == 'y'):
+                            listDate = datetime.datetime.now().strftime('%Y-%m-%d')
+                            print("Fetching data, please wait...\n")
+                            userRolas = db.userListenings(listUser, listDate)
+                            mdb.genUserListenings(listUser, userRolas, listDate)
+                            print(listUser,"`s listenings saved!\n")
+                            break
+                        elif(fechpreg == 'n'):
+                            listDate = input("Please enter the date as YYYY-MM-DD ")
+                            print("Fetching data, please wait...\n")
+                            userRolas = db.userListenings(listUser, listDate)
+                            print('Done! \n')
+                            print("Sending data, please wait...\n")
+                            mdb.genUserListenings(listUser, userRolas, listDate)
+                            print(listUser,"`s listenings saved!\n")
+                            break
+                        else:
+                            print("Enter a valid option \n")
+                        break
+                else:
+                    print("Enter a valid option \n")
+                break
+        if(menu2==6):
             break
 
 def monitorMenu(user, type, userID):
-    #monitor A
+    # monitor A
     if type == 3:
         print('\nMonitor A Login Successful!\n')
         while True:
@@ -256,7 +357,7 @@ def monitorMenu(user, type, userID):
                     break
             elif(menu2 ==3):
                 break
-    #monitor B
+    # monitor B
     elif type == 4:
         print('\nMonitor B Login Successful!\n')
         while True:

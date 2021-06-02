@@ -5,11 +5,11 @@ db = myclient["proyecto"]
 listenings = db["Listenings"]
 
 #admin puede ver las canciones reproducidas en cierta fecha
-def genUserListenings(user, canciones):
+def genUserListenings(user, canciones, upTo):
     listened = dict()
     for x in canciones:
         listened.update({x[0]: x[1]})
-    perUser = {'user':user, 'listenings':listened}
+    perUser = {'user':user, 'listenings':listened, 'date': upTo}
     listenings.insert_one(perUser)
 
 #recomendacion de 10 usuarios y tracks nuevos

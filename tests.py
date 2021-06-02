@@ -16,6 +16,5 @@ con = psycopg2.connect(
     user = 'ifgilvux',
     password = 'MRUyQ-aHX7MHs_nHxahu98Yy0yaXEiGr',
 )
-rolas = psql.userListenings('pineda','2021-06-01')
-mongo.genUserListenings('pineda', rolas)
-print("listo")
+
+print(psql.notActive())
