@@ -41,7 +41,7 @@ def subsMenu(user):
     while True:
         print("\nCurrent Subscription: Premium\n")
         print("What do you want to do? ")
-        print("1. Listen to music \n2. Playlists \n3. Exit")
+        print("1. Listen to music \n2. Playlists \n3. Top 10 new Songs \n4. Exit")
         menu2 = int(input())
         if (menu2 == 1):
             # muestra el catalogo
@@ -93,6 +93,9 @@ def subsMenu(user):
                 else:
                     break
         if(menu2 == 3):
+            print("Top 10 recently added songs! ")
+            break
+        if(menu2 == 4):
             break
 
 # menu para suscribirse
@@ -117,7 +120,7 @@ def subMenu():
 def adminMenu(user, userID):
     while True:
         print("What do you want to do? ")
-        print("1. Listen to music \n2. Management Tools\n3. Automatic listenings\n4. Add New Random songs \n5. Save users' listenings\n6. Exit\n")
+        print("1. Listen to music \n2. Management Tools\n3. Automatic listenings\n4. Add New Random songs \n5. Save users' listenings\n6. Recommend Songs to less active users \n7. Exit\n")
         menu2 = int(input())
         if (menu2 == 1):
             # muestra el catalogo
@@ -250,8 +253,13 @@ def adminMenu(user, userID):
             print("Add new random songs to the platform. ")
             qtySongs = int(input("Please enter the quantity of new songs you want to generate. "))
             print("Generating songs, please wait...")
-            db.genSongs(qtySongs, userID)
-            print(qtySongs, ' new songs are now active on the platform! \n')
+            counter = 0
+            notactives = db.notActive()
+            while counter < qtySongs:
+                db.genSongs(userID, notactives)
+                counter += 1
+                print(counter, '/',qtySongs, " song generated")
+            print('\n', qtySongs, ' new songs are now active on the platform! \n')
         elif(menu2 == 5):
             print("Save user's listenings")
             while True:
@@ -305,7 +313,14 @@ def adminMenu(user, userID):
                 else:
                     print("Enter a valid option \n")
                 break
-        if(menu2==6):
+        elif(menu2 == 6):
+            print("\nRecommend Songs to less active users")
+            print("\nThe 10 less active users are: ")
+            db.usersRecommends()
+            print("\nWe recommend These songs to them: ")
+            db.recommends()
+            print('\n')
+        if(menu2==7):
             break
 
 def monitorMenu(user, type, userID):

@@ -179,7 +179,6 @@ def newSearch(id, user, cancion):
 
 def simulSearch(id, user, cancion, dategg):
     # fecha actual para guardar registro en la base de datos
-    rn = datetime.datetime.now()
     cur = con.cursor()
     cur.execute('insert into buscador values(%s, %s, %s, %s)', (id, user, cancion, dategg))
     con.commit()
@@ -206,7 +205,7 @@ def searchSong(song):
 def catalogo():
     cur = con.cursor()
     cur.execute(
-        'select id_cancion, nombre, artista from cancion order by id_cancion, nombre, link')
+        "select id_cancion, nombre, artista from cancion where active = 'V' order by fecha_lanzamiento desc, nombre, link")
     row = cur.fetchall()
     for r in row:
         print("")
@@ -480,22 +479,19 @@ def userListenings(user, date):
 def notActive():
     newarray = list()
     cur = con.cursor()
-    cur.execute("select id_cancion from cancion where active = 'F'")
+    cur.execute("select id_cancion from cancion where active = 'F' order by id_cancion asc")
     row = cur.fetchall()
     for x in row:
-        newarray.append(int(x[0]))
+        newarray.append(x[0])
     return newarray
 
 #para sacar las canciones random
-def genSongs(qty, adminId):
-    cur = con.cursor()
+def genSongs(adminId, notActiveSongs):
     rn = datetime.datetime.now()
-    notActiveSongs = notActive()
-    counter = 0
-    while counter < qty:
-        index = randint(0, len(notActiveSongs))
-        newSong = notActiveSongs.pop(index)
-        cur.execute("update cancion set active = 'V', updated_by = %s, lastupdatedd = %s, lastupdatedt=%s where id_cancion = %s", (adminId, rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), newSong))
+    newSong = choice(notActiveSongs)
+    cur = con.cursor()
+    cur.execute("update cancion set active = 'V', updated_by = %s, fecha_lanzamiento = %s, lastupdatedd = %s, lastupdatedt=%s where id_cancion = %s",
+                (adminId, rn.strftime('%Y-%m-%d'), rn.strftime('%Y-%m-%d'), rn.strftime('%H:%M:%S'), newSong))
     con.commit()
 
 #para generar las reproducciones aleatorias
@@ -509,11 +505,18 @@ def genListenings(qty, date):
         simulSearch(newID, choice(usuarios), larola, date)
         counter += 1
 
+def recommends():
+    recommended = list()
+    cur = con.cursor()
+    cur.execute("select c.id_cancion, c.nombre, c.artista, genero from cancion c where active = 'V' and fecha_lanzamiento = (select max(fecha_lanzamiento) from cancion) limit 10")
+    row = cur.fetchall()
+    for r in row:
+        print(f"Song ID: {r[0]}, Song name: {r[1]}, Artist: {r[2]}, Genre: {r[3]}")
 
-#jalar la info del csv
-def cancionesPan():
-    import pandas as pd
-    with open("songs.csv", encoding="utf-8" ) as f:
-        texto = f.read()
-    f.close()
-    cancion = texto.split("\n")
+def usersRecommends():
+    usernames = list()
+    cur = con.cursor()
+    cur.execute("select usuario from buscador group by usuario order by count(usuario) asc limit 10")
+    row = cur.fetchall()
+    for r in row:
+        print(f"user: {r[0]}")
